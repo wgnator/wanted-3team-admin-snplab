@@ -1,0 +1,16 @@
+{
+  "register": [
+    {
+      "round": 1,
+      "id": 1,
+      "date": "2022-07-21",
+      "name": "정윤서",
+      "birth": "1998.01.10",
+      "contact": "010-5897-8991",
+      "email": "jys1391@gmail.com",
+      "transportation": "자가용",
+      "address": "청주시 청원구",
+      "accepted" : true
+    }
+  ]
+}
