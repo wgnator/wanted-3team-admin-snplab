@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import Router from './Router';
+import { GlobalStyle } from './styles/GlobalStyle';
 
 function App() {
-
   return (
-    <div className="App">
-
-    </div>
-  )
+    <>
+      <GlobalStyle />
+      <Router />
+    </>
+  );
 }
 
-export default App
+export default App;
