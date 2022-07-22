@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
+import { dataExample } from './dataExample';
 
 export default function ApplicantsList() {
   const [data, setData] = useState<Applicant[]>([]);
   const [listsOfCurrentPage, setListsOfCurrentPage] = useState<Applicant[]>([]);
   const [numOfCurrentPage, setNumOfCurrentPage] = useState<number>(1);
-  const [numOfPages, setNumOfPages] = useState<number>(13);
+  const [numOfPages, setNumOfPages] = useState<number>(0);
   const [numOfStartBtn, setNumOfStartBtn] = useState<number>(1);
   const listsPerPage = 20;
 
@@ -28,16 +29,21 @@ export default function ApplicantsList() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetch('../../database.json');
-      const obj = await data.json();
-      const register = obj.register.map((applicant: Applicant, index: number) => {
-        return { ...applicant, order: index + 1 };
-      });
-      setData(register);
-      setNumOfPages(Math.ceil(obj.register.length / listsPerPage));
-    };
-    fetchData();
+    // const fetchData = async () => {
+    //   const data = await fetch('../../database.json');
+    //   const obj = await data.json();
+    //   const register = obj.register.map((applicant: Applicant, index: number) => {
+    //     return { ...applicant, order: index + 1 };
+    //   });
+    //   setData(register);
+    //   setNumOfPages(Math.ceil(obj.register.length / listsPerPage));
+    // };
+    // fetchData();
+    const register = dataExample.map((applicant: Applicant, index: number) => {
+      return { ...applicant, order: index + 1 };
+    });
+    setData(register);
+    setNumOfPages(Math.ceil(dataExample.length / listsPerPage));
   }, []);
 
   useEffect(() => {
