@@ -43,7 +43,7 @@ export default function ApplicantsList() {
 
   return (
     <Container>
-      <table>
+      <Table>
         <thead>
           <tr>
             <th>Num.</th>
@@ -82,7 +82,7 @@ export default function ApplicantsList() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
       <Pagination>
         <Arrow onClick={() => setNumOfStartBtn((prev) => prev - 5)} disabled={numOfStartBtn > 1 ? false : true}>
           &lt;
@@ -115,7 +115,19 @@ export default function ApplicantsList() {
 }
 
 const Container = styled.div`
+  width: 95%;
+  padding-bottom: 16px;
   background-color: ${theme.backgroundMediumColor};
+`;
+
+const Table = styled.table`
+  width: 100%;
+  margin-bottom: 16px;
+  text-align: center;
+  th,
+  td {
+    padding: 4px;
+  }
 `;
 
 const Pagination = styled.nav`
