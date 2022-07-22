@@ -4,8 +4,10 @@ import { Applicant } from '../interfaces/types';
 
 export default function ApplicantsList() {
   const [data, setData] = useState<Applicant[]>([]);
-  const [currentLists, setCurrentLists] = useState<Applicant[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [listsOfCurrentPage, setListsOfCurrentPage] = useState<Applicant[]>([]);
+  const [numOfCurrentPage, setNumOfCurrentPage] = useState<number>(1);
+  const [numOfPages, setNumOfPages] = useState<number>(13);
+  const [numOfStartBtn, setNumOfStartBtn] = useState<number>(1);
   const listsPerPage = 5;
 
   const handleCheckboxClick = (id: number) => {
@@ -17,25 +19,26 @@ export default function ApplicantsList() {
     setData(newData);
   };
 
+  const getlistsOfCurrentPage = (data: Applicant[]) => {
+    const indexOfLast = numOfCurrentPage * listsPerPage;
+    const indexOfFirst = indexOfLast - listsPerPage;
+    const listsOfCurrentPage = data.slice(indexOfFirst, indexOfLast);
+    setListsOfCurrentPage(listsOfCurrentPage);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetch('../../database.json');
       const obj = await data.json();
       setData(obj.register);
-      console.log('데이터요청 함수 실행');
+      setNumOfPages(Math.ceil(obj.register.length / listsPerPage));
     };
     fetchData();
   }, []);
 
   useEffect(() => {
-    const getCurrentLists = async (data: Array) => {
-      const indexOfLast = currentPage * listsPerPage;
-      const indexOfFirst = indexOfLast - listsPerPage;
-      const currentLists = await data.slice(indexOfFirst, indexOfLast);
-      setCurrentLists(currentLists);
-    };
-    getCurrentLists(data);
-  }, [currentPage, data]);
+    getlistsOfCurrentPage(data);
+  }, [numOfCurrentPage, data]);
 
   return (
     <>
@@ -56,7 +59,7 @@ export default function ApplicantsList() {
           </tr>
         </thead>
         <tbody>
-          {currentLists.map((applicant: Applicant, index: number) => (
+          {listsOfCurrentPage.map((applicant: Applicant, index: number) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{applicant.date}</td>
@@ -79,24 +82,33 @@ export default function ApplicantsList() {
           ))}
         </tbody>
       </table>
-      <div>currentpage : {currentPage}</div>
+      <div>numOfCurrentPage : {numOfCurrentPage}</div>
       <div>listsPerPage : {listsPerPage}</div>
       <Pagination>
-        <button>&lt;</button>
+        <button onClick={() => setNumOfStartBtn((prev) => prev - 5)} disabled={numOfStartBtn > 1 ? false : true}>
+          &lt;
+        </button>
         <ol>
-          {[1, 2, 3, 4, 5].map((el) => (
-            <li key={el}>
-              <button
-                onClick={(e) => {
-                  setCurrentPage(Number(e.target.textContent));
-                }}
-              >
-                {el}
-              </button>
+          {new Array(5).fill('').map((_, index) => (
+            <li key={numOfStartBtn + index}>
+              {numOfStartBtn + index <= numOfPages && (
+                <button
+                  onClick={(e) => {
+                    setNumOfCurrentPage(Number(e.target.textContent));
+                  }}
+                >
+                  {numOfStartBtn + index}
+                </button>
+              )}
             </li>
           ))}
         </ol>
-        <button>&gt;</button>
+        <button
+          onClick={() => setNumOfStartBtn((prev) => prev + 5)}
+          disabled={numOfStartBtn + 4 >= numOfPages ? true : false}
+        >
+          &gt;
+        </button>
       </Pagination>
     </>
   );
