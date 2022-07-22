@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Applicant } from '../interfaces/types';
+import { theme } from '../styles/theme';
 
 export default function ApplicantsList() {
   const [data, setData] = useState<Applicant[]>([]);
@@ -41,7 +42,7 @@ export default function ApplicantsList() {
   }, [numOfCurrentPage, data]);
 
   return (
-    <>
+    <Container>
       <table>
         <thead>
           <tr>
@@ -82,41 +83,67 @@ export default function ApplicantsList() {
           ))}
         </tbody>
       </table>
-      <div>numOfCurrentPage : {numOfCurrentPage}</div>
-      <div>listsPerPage : {listsPerPage}</div>
       <Pagination>
-        <button onClick={() => setNumOfStartBtn((prev) => prev - 5)} disabled={numOfStartBtn > 1 ? false : true}>
+        <Arrow onClick={() => setNumOfStartBtn((prev) => prev - 5)} disabled={numOfStartBtn > 1 ? false : true}>
           &lt;
-        </button>
+        </Arrow>
         <ol>
           {new Array(5).fill('').map((_, index) => (
             <li key={numOfStartBtn + index}>
               {numOfStartBtn + index <= numOfPages && (
-                <button
+                <Button
                   onClick={(e) => {
                     setNumOfCurrentPage(Number(e.target.textContent));
                   }}
+                  color={numOfCurrentPage === numOfStartBtn + index ? theme.borderOnFocusColor : theme.borderDarkColor}
                 >
                   {numOfStartBtn + index}
-                </button>
+                </Button>
               )}
             </li>
           ))}
         </ol>
-        <button
+        <Arrow
           onClick={() => setNumOfStartBtn((prev) => prev + 5)}
           disabled={numOfStartBtn + 4 >= numOfPages ? true : false}
         >
           &gt;
-        </button>
+        </Arrow>
       </Pagination>
-    </>
+    </Container>
   );
 }
 
+const Container = styled.div`
+  background-color: ${theme.backgroundMediumColor};
+`;
+
 const Pagination = styled.nav`
   display: flex;
+  justify-content: center;
   ol {
     display: flex;
   }
+`;
+
+const Button = styled.button`
+  margin: 4px;
+  padding: 2px 0;
+  width: 24px;
+  border-radius: 4px;
+  color: ${(props) => props.color};
+  background-color: white;
+  border: 1px solid ${(props) => props.color};
+  cursor: pointer;
+`;
+
+const Arrow = styled.button`
+  margin: 4px;
+  padding: 2px 0;
+  width: 24px;
+  border-radius: 4px;
+  color: ${(props) => (props.disabled ? theme.borderLightColor : theme.borderDarkColor)};
+  background-color: white;
+  border: 1px solid ${(props) => (props.disabled ? theme.borderLightColor : theme.borderDarkColor)};
+  cursor: pointer;
 `;
