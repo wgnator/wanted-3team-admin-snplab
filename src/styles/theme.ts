@@ -11,4 +11,4 @@ export const theme = {
   borderLightColor: 'rgb(204,204,204)',
   borderDarkColor: 'rgb(146, 146, 146)',
   borderOnFocusColor: 'rgb(26,103,210)',
-};
+} as const;
