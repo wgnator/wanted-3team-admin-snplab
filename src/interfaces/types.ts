@@ -14,4 +14,5 @@ export interface Applicant {
   transportation: TransportationTypes;
   address: string;
   accepted: boolean;
+  order?: number;
 }
