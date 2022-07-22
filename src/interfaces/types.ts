@@ -12,9 +12,31 @@ export interface Applicant {
   address: string;
   accepted: boolean;
 }
-
+export interface responseType {
+  config:object,
+  data:object,
+  headers:object,
+  request:object,
+  status:number,
+  statusText:string
+}
 export type SearchCategory = 'name' | 'date' | 'gender' | 'birth' | 'transportation' | 'address';
 export interface searchQueryType {
   category: SearchCategory;
   searchString: string;
+}
+type regcode = "code:string" & "name:stirng"
+export interface AddressSi {
+    code:string,
+    name:string
+}
+export interface AddressObj {
+    siRegData:{
+      code:string,
+      name:string
+    },
+    dataInsert:any,
+    getAddressSi:()=>{},
+    getAddressGu:any
+  
 }

@@ -1,12 +1,12 @@
 import React from "react";
 import { useEffect } from "react";
-import apiAddress from "../api/apiAddress"
-import useRegister from "../hooks/useRegister";
+import useAddress from "../hooks/useAddress"
+// import useRegister from "../hooks/useRegister";
 
 export default function TestPage() {
-  const {address,addressData} = apiAddress()
+  const {address,getAddress} = useAddress()
   const [test,setTest] = React.useState();
-  const {applicant,applicants,searchData} = useRegister();
+  // const {applicant,applicants,searchData} = useRegister();
   const userData = {
       "round": 1,
       "id": 7,
@@ -32,23 +32,32 @@ export default function TestPage() {
       "accepted" : true
   }
   const search = {
-    category:"birth",
-    title:"1998"
+    category:"address",
+    title:"청주시"
   }
   useEffect(()=>{
-    (() => {
-      address.getAddressSi()
-      address.getAddressGu("대전")
-    })()
-    applicant.post(userData)
-    applicant.search(search?.category,search.title)
-    applicant.get()
+    // (() => {
+    //   address.getSi()
+    //   address.getGu("서울")
+    // })()
+    // getSi();
+    console.log("서치 실행");
+
+    // applicant.post(userData)
+    // applicant.search(search?.category,search.title)
+    // applicant.get()
 
   },[])
-  console.log("테스트",applicants);
-  console.log("서치 테스트",searchData);
+  console.log("테스트",address?.regcodes);
+  // console.log("서치 테스트",searchData);
   
   
-  
-  return <div></div>
+  return (
+    <div>
+      <button onClick={(e)=> getAddress(e.target.innerText)}>대전</button>
+      <button onClick={(e)=> getAddress(e.target.innerText)}>서울</button>
+      <button onClick={(e)=> getAddress(e.target.innerText)}>대구</button>
+    </div>
+    
+  )
 }
