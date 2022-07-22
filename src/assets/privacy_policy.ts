@@ -1,5 +1,5 @@
 const PersonalInformationPolicy = {
-  PersonalInformation: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  개인정보처리방침: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
   <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
   <head>
@@ -26,7 +26,7 @@ const PersonalInformationPolicy = {
   </body>
   </html>
   `,
-  ConsentToProvideInformation: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  제3자정보제공: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
   <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
   <head>
