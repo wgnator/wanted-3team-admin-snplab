@@ -9,7 +9,7 @@ export default function ApplicantsList() {
   const [numOfCurrentPage, setNumOfCurrentPage] = useState<number>(1);
   const [numOfPages, setNumOfPages] = useState<number>(13);
   const [numOfStartBtn, setNumOfStartBtn] = useState<number>(1);
-  const listsPerPage = 5;
+  const listsPerPage = 20;
 
   const handleCheckboxClick = (id: number) => {
     const newData = data.map((applicant) => {
@@ -31,7 +31,10 @@ export default function ApplicantsList() {
     const fetchData = async () => {
       const data = await fetch('../../database.json');
       const obj = await data.json();
-      setData(obj.register);
+      const register = obj.register.map((applicant: Applicant, index: number) => {
+        return { ...applicant, order: index + 1 };
+      });
+      setData(register);
       setNumOfPages(Math.ceil(obj.register.length / listsPerPage));
     };
     fetchData();
@@ -62,7 +65,7 @@ export default function ApplicantsList() {
         <tbody>
           {listsOfCurrentPage.map((applicant: Applicant, index: number) => (
             <tr key={index}>
-              <td>{index + 1}</td>
+              <td>{applicant.order}</td>
               <td>{applicant.date}</td>
               <td>{applicant.name}</td>
               <td>{applicant.gender}</td>
