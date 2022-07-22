@@ -12,7 +12,7 @@ type SearchBarProps = {
 
 export default function SearchBar({ setQuery }: SearchBarProps) {
   const [fieldToSearch, setFieldToSearch] = useState('name');
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>('');
   const [inputComponent, setInputComponent] =
     useState<FunctionComponentElement<{ setValue: SetStateAction<string> }>>();
   const formRef = useRef<HTMLFormElement>(null);
@@ -38,7 +38,6 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
   useEffect(() => {
     setInputComponent(getInputComponent(fieldToSearch, setInputValue));
     setInputValue('');
-    console.log(inputValue);
   }, [fieldToSearch]);
 
   return (
