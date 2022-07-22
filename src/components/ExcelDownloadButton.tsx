@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
+import { exportToCsv } from '../utils/exportToCsv';
 
 export default function ExcelDownloadButton() {
-  return <Container>엑셀 다운로드</Container>;
+  return <Container onClick={() => exportToCsv()}>엑셀 다운로드</Container>;
 }
 
 const Container = styled.button`
