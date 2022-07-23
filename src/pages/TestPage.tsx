@@ -4,8 +4,7 @@ import useAddress from "../hooks/useAddress"
 // import useRegister from "../hooks/useRegister";
 
 export default function TestPage() {
-  const {address,getAddress} = useAddress()
-  const [test,setTest] = React.useState();
+  const {siAddress,guAddress,searchAddress,getAddressApi} = useAddress()
   // const {applicant,applicants,searchData} = useRegister();
   const userData = {
       "round": 1,
@@ -41,22 +40,30 @@ export default function TestPage() {
     //   address.getGu("서울")
     // })()
     // getSi();
-    console.log("서치 실행");
+    getAddressApi();
 
     // applicant.post(userData)
     // applicant.search(search?.category,search.title)
     // applicant.get()
 
   },[])
-  console.log("테스트",address?.regcodes);
+  
+  useEffect(()=>{
+    console.log("시 테스트",siAddress);
+    console.log("구 테스트",guAddress);
+
+  },[siAddress,guAddress])
+
+
+  
   // console.log("서치 테스트",searchData);
   
   
   return (
     <div>
-      <button onClick={(e)=> getAddress(e.target.innerText)}>대전</button>
-      <button onClick={(e)=> getAddress(e.target.innerText)}>서울</button>
-      <button onClick={(e)=> getAddress(e.target.innerText)}>대구</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대전</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>서울</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대구</button>
     </div>
     
   )
