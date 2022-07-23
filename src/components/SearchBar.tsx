@@ -2,7 +2,7 @@ import React, { FunctionComponentElement, SetStateAction, useEffect, useRef, use
 import { BiSearch } from 'react-icons/bi';
 import { GoTriangleDown } from 'react-icons/go';
 import styled from 'styled-components';
-import { searchQueryType } from '../interfaces/types';
+import { SearchCategory, searchQueryType } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { getInputComponent } from './SearchBarInputComponents';
 
@@ -11,7 +11,7 @@ type SearchBarProps = {
 };
 
 export default function SearchBar({ setQuery }: SearchBarProps) {
-  const [fieldToSearch, setFieldToSearch] = useState('name');
+  const [fieldToSearch, setFieldToSearch] = useState<SearchCategory>(SearchCategory.NAME);
   const [inputValue, setInputValue] = useState<string>('');
   const [inputComponent, setInputComponent] =
     useState<FunctionComponentElement<{ setValue: SetStateAction<string> }>>();
@@ -48,18 +48,18 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
         }}
       >
         <FieldToSearchPicker value={fieldToSearch} onChange={handleFieldToSearchChange}>
-          <option value="name">지원자명</option>
-          <option value="date">지원날짜</option>
-          <option value="gender">성별</option>
-          <option value="birth">생년월일</option>
-          <option value="transportation">이용수단</option>
-          <option value="address">거주지</option>
+          <option value={SearchCategory.NAME}>지원자명</option>
+          <option value={SearchCategory.DATE}>지원날짜</option>
+          <option value={SearchCategory.GENDER}>성별</option>
+          <option value={SearchCategory.BIRTH}>생년월일</option>
+          <option value={SearchCategory.TRANSPORTATION}>이용수단</option>
+          <option value={SearchCategory.ADDRESS}>거주지</option>
         </FieldToSearchPicker>
         <GoTriangleDown style={{ position: 'relative', left: '-1rem', fontSize: '0.6rem' }} />
         <InputWrapper>{inputComponent}</InputWrapper>
 
         <SubmitButton>
-          <BiSearch style={{ color: theme.borderLightColor }} />
+          <BiSearch style={{ color: theme.borderDarkColor }} />
         </SubmitButton>
       </Box>
     </form>

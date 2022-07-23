@@ -17,30 +17,36 @@ export interface Applicant {
   order?: number;
 }
 export interface responseType {
-  config:object,
-  data:object,
-  headers:object,
-  request:object,
-  status:number,
-  statusText:string
+  config: object;
+  data: object;
+  headers: object;
+  request: object;
+  status: number;
+  statusText: string;
 }
-export type SearchCategory = 'name' | 'date' | 'gender' | 'birth' | 'transportation' | 'address';
+export enum SearchCategory {
+  NAME = 'name',
+  DATE = 'date',
+  GENDER = 'gender',
+  BIRTH = 'birth',
+  TRANSPORTATION = 'transportation',
+  ADDRESS = 'address',
+}
 export interface searchQueryType {
-  category: SearchCategory;
+  category: string;
   searchString: string;
 }
-type regcode = "code:string" & "name:stirng"
+type regcode = 'code:string' & 'name:stirng';
 export interface AddressSi {
-    code:string,
-    name:string
+  code: string;
+  name: string;
 }
 export interface AddressObj {
-    siRegData:{
-      code:string,
-      name:string
-    },
-    dataInsert:any,
-    getAddressSi:()=>{},
-    getAddressGu:any
-  
+  siRegData: {
+    code: string;
+    name: string;
+  };
+  dataInsert: any;
+  getAddressSi: () => {};
+  getAddressGu: any;
 }
