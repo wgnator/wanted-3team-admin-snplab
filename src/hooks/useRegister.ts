@@ -17,9 +17,11 @@ export default function useRegister() {
     }
 
     function searchApplicant (category:string,searchString:string|number) {
+      
        registerService.get(`?${category}_like=${searchString}`, (response:responseType)=>{
         setSearchData(response.data)
        })
+        throw new Error('Not implemented.');
     }
 
   
