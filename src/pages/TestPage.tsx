@@ -1,11 +1,12 @@
 import React from "react";
 import { useEffect } from "react";
+import { errorService } from "../api/axiosInstance";
 import useAddress from "../hooks/useAddress"
-// import useRegister from "../hooks/useRegister";
+import useRegister from "../hooks/useRegister";
 
 export default function TestPage() {
   const {siAddress,guAddress,searchAddress,getAddressApi} = useAddress()
-  // const {applicant,applicants,searchData} = useRegister();
+  const {postApplicants,applicants,getApplicants} = useRegister();
   const userData = {
       "round": 1,
       "id": 7,
@@ -51,11 +52,20 @@ export default function TestPage() {
   useEffect(()=>{
     console.log("시 테스트",siAddress);
     console.log("구 테스트",guAddress);
-
+    
   },[siAddress,guAddress])
+  function clickError () {
+    errorService.get("http://abcedeafjqps1038q:2910", (response:responseType)=>{
+      console.log("에러쓰",response);
+    })
+  }
+  function postCheck () {
+    postApplicants(userData)
+  }
+  useEffect(()=>{
+    console.log("지원자 데이터 테스트",applicants);
 
-
-  
+  },[])
   // console.log("서치 테스트",searchData);
   
   
@@ -64,6 +74,11 @@ export default function TestPage() {
       <button onClick={(e)=> searchAddress(e.target?.innerText)}>대전</button>
       <button onClick={(e)=> searchAddress(e.target?.innerText)}>서울</button>
       <button onClick={(e)=> searchAddress(e.target?.innerText)}>대구</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대파</button>
+      
+      <button onClick={()=>getApplicants()}>지원자 받기</button>
+      <button onClick={postCheck}>포스트 보내기</button>
+      <button onClick={clickError}>에러발생</button>
     </div>
     
   )

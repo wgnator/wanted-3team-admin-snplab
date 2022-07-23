@@ -11,11 +11,14 @@ export default function useAddress(){
   const [guAddress , setGuAddres] = React.useState();
   const {saveInCache,returnCache} = useCache();
 
+  function setAddresData(set:any,response:object){
+    return set(response)
+  }
+
   function getAddressApi(city?:string) {
-    console.log("시 실행");
-    
+    console.log("시 실행 !!!!!!!!!!");
     addressService.get(`${regCode}=*00000000`,(response:responseType) => {
-      setSiAddress(response.data)
+      setAddresData(setSiAddress,response.data)
       saveInCache("address",response.data)
     })
     if(city){
@@ -26,17 +29,17 @@ export default function useAddress(){
   function searchAddress (city:string) {
     const reg = returnCache("address")
     setTimeout(()=>{
+      console.log("구 실행 !!!!!!!!!!",reg,city);
+      const cityType:AddressSi = getMatchCity(reg,city)
+      if(cityType === undefined) return addressService.addressError(`'${city}' is not found city`)
       if(reg){
-          console.log("구실행",reg,city);
-          const cityType:AddressSi = getMatchCity(reg,city)
           addressService.get(`${regCode}=${cityType?.code?.substring(0, 2)}*000000`,(response:responseType) => {
-          setGuAddres(response.data)
-          })
+          setAddresData(setGuAddres,response.data)
+          });
         }else{
           getAddressApi(city);
         }
     },100)
-    
   }
     
   return {siAddress,guAddress,getAddressApi,searchAddress}
