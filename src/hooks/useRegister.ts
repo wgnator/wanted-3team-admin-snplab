@@ -23,7 +23,7 @@ export default function useRegister() {
   }
 
   function postApplicants (application:Applicant){
-    const result = registerService.get(`?id=${application.id}`,(response:ResponseType)=>{  
+      registerService.get(`?id=${application.id}`,(response:ResponseType)=>{  
       console.log(typeof response.data);
          
       if(response.data.length){

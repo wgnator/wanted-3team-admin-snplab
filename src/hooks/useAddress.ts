@@ -16,7 +16,6 @@ export default function useAddress(){
   }
 
   function getAddressApi(city?:string) {
-    console.log("시 실행 !!!!!!!!!!");
     addressService.get(`${regCode}=*00000000`,(response:responseType) => {
       setAddresData(setSiAddress,response.data)
       saveInCache("address",response.data)
@@ -29,7 +28,6 @@ export default function useAddress(){
   function searchAddress (city:string) {
     const reg = returnCache("address")
     setTimeout(()=>{
-      console.log("구 실행 !!!!!!!!!!",reg,city);
       const cityType:AddressSi = getMatchCity(reg,city)
       if(cityType === undefined) return addressService.addressError(`'${city}' is not found city`)
       if(reg){
