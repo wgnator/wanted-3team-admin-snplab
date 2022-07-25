@@ -4,7 +4,7 @@ import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { dataExample } from './dataExample';
 
-export default function ApplicantsList({ data = dataExample }) {
+export default function ApplicantsList({ data }: any, { updateApplicantData }: any) {
   const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
 
   const [listsOfCurrentTab, setListsOfCurrentTab] = useState<Applicant[]>([]);
@@ -24,13 +24,15 @@ export default function ApplicantsList({ data = dataExample }) {
     setNumOfStartBtn(1);
   };
 
-  const handleCheckboxClick = (id: number) => {
+  const handleCheckboxClick = (id: number, accepted: boolean) => {
     const newListsOfCurrentTab = listsOfCurrentTab.map((applicant) =>
       applicant.id === id ? { ...applicant, accepted: !applicant['accepted'] } : applicant,
     );
     setListsOfCurrentTab(newListsOfCurrentTab);
     arrayOfFilteredData[numOfCurrentTab - 1] = newListsOfCurrentTab;
     setArrayOfFilteredData(arrayOfFilteredData);
+
+    updateApplicantData(id, !accepted);
   };
 
   const getlistsOfCurrentPage = (data: Applicant[]) => {
@@ -118,7 +120,7 @@ export default function ApplicantsList({ data = dataExample }) {
                 <input
                   type="checkbox"
                   checked={applicant.accepted}
-                  onChange={() => handleCheckboxClick(applicant.id)}
+                  onChange={() => handleCheckboxClick(applicant.id, applicant.accepted)}
                 />
               </td>
               <td>{applicant.round}</td>
