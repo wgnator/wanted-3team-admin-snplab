@@ -1,55 +1,40 @@
-
-
-export const aaa = {
-  aasfd:"aaaa"
+import { ResponseType, SearchQueryType,ApplicantQuery } from './../interfaces/types';
+interface getApplicants {
+  all:Applicant
+  search:Applicant,
 }
-// import React from 'react';
-// import { registerService } from "../api/axiosInstance";
-// import { Applicant } from '../interfaces/types';
-// export default function useRegister() {
-//   const [applicants,setApplicants] = React.useState();
-//   const [searchData,setSearchData] = React.useState();
-//   const applicant = {
-//     get: async ()=>{
-//       await registerService.get("")
-//         .then((getRes)=>{
-//           console.log("겟 덴" , getRes.data);
-//           setApplicants(getRes.data);
-//       })
-//       .catch((error)=>{
-//         console.log("겟 에러",error);
-//       })
-//     },
-//     post: async (application:Applicant)=>{
-//       await registerService.post("",application)
-//       .then((postRes)=>{
-//         console.log("포스트 덴",postRes.data);
-//       })
-//       .catch((error) => {
-//         console.log("포스트 에러",error.request.status);
-//       })
-//     },
-//     put: (data:any)=>{
-//       registerService.put("/register",data).then((putRes)=>{
-//         console.log("풋 덴",putRes.data);
-//       })
-//     },
-//     search:async (category:string,searchString:string|number)=>{
 
-//       await registerService.get(`?${category}_like=${searchString}`)
-//       .then((searchRes)=>{
-//         console.log("서치 덴",searchRes.data);
-//         setSearchData(searchRes.data)
-//       })
-//       .catch((error)=>{
-//         console.log("서치 에러",error);
-//       })
-//     }
+import React from 'react';
+import { registerService } from "../api/axiosInstance";
+import { Applicant } from '../interfaces/types';
+export default function useRegister() {
+  const [applicants,setApplicants] = React.useState<ApplicantQuery | null>(null);
+  const [postHandler,setPostHandler] = React.useState(false);
+  function getApplicants (query?:SearchQueryType) {
+    if(query){
+      registerService.get(`?${query.category}_like=${query.searchString}`, (response:ResponseType)=>{
+      setApplicants(response.data)
+    })
+    }else{
+      registerService.get("",(response:ResponseType)=>{
+      setApplicants(response.data);
+    })
+    }
+  }
 
-//   }
-//     setTimeout(()=>{
-//       console.log("지원자 데이터",applicants);
-//     },400)
+  function postApplicants (application:Applicant){
+      registerService.get(`?id=${application.id}`,(response:ResponseType)=>{  
+      console.log(typeof response.data);
+         
+      if(response.data.length){
+        console.log("겹치는 id가 있습니다");
+        setPostHandler(false);
+      }else{
+        registerService.post("",application)
+        setPostHandler(true);
+      }
+    })
+  }
     
-//   return {applicant,applicants,searchData}
-// };
+  return {getApplicants,postApplicants,applicants,postHandler}
+};

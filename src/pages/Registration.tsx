@@ -12,6 +12,7 @@ import PolicyConfirm from '../components/PolicyConfirm';
 import CheckboxInput from '../components/CheckboxInput';
 import Checkbox from '../components/Checkbox';
 import CheckboxContainer from '../components/CheckboxContainer';
+import useRegister from '../hooks/useRegister';
 
 type TransportationTypes = '버스' | '지하철' | '택시' | 'KTX/기차' | '도보' | '자전거' | '전동킥보드' | '자가용';
 
@@ -44,7 +45,7 @@ export default function Registration() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { modal: keyof typeof PersonalInformationPolicy };
-
+  const {postApplicants,applicantsHandler} = useRegister();
   const [inputStatus, setInputStatus] = useState({
     이름: { isValid: false, message: '' },
     생년월일: { isValid: false, message: '' },
@@ -113,7 +114,9 @@ export default function Registration() {
         .filter(([transportation, isValid]) => isValid && transportation)
         .map((transportation) => transportation[0]),
     };
-
+    postApplicants(postData)
+    console.log("성공적으로 보냇는가 ? :", applicantsHandler);
+    
     console.log('폼 최종', postData);
   };
 
