@@ -16,3 +16,37 @@ export interface Applicant {
   accepted: boolean;
   order?: number;
 }
+export interface responseType {
+  config: object;
+  data: object;
+  headers: object;
+  request: object;
+  status: number;
+  statusText: string;
+}
+export enum SearchCategory {
+  NAME = 'name',
+  DATE = 'date',
+  GENDER = 'gender',
+  BIRTH = 'birth',
+  TRANSPORTATION = 'transportation',
+  ADDRESS = 'address',
+}
+export interface searchQueryType {
+  category: string;
+  searchString: string;
+}
+type regcode = 'code:string' & 'name:stirng';
+export interface AddressSi {
+  code: string;
+  name: string;
+}
+export interface AddressObj {
+  siRegData: {
+    code: string;
+    name: string;
+  };
+  dataInsert: any;
+  getAddressSi: () => {};
+  getAddressGu: any;
+}
