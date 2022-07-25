@@ -7,6 +7,7 @@ import { dataExample } from './dataExample';
 export default function ApplicantsList({ data }: any, { updateApplicantData }: any) {
   const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
 
+  //listsOfCurrentTab csv 다운로드!!
   const [listsOfCurrentTab, setListsOfCurrentTab] = useState<Applicant[]>([]);
   const [numOfCurrentTab, setNumOfCurrentTab] = useState<number>(1);
 
@@ -43,32 +44,29 @@ export default function ApplicantsList({ data }: any, { updateApplicantData }: a
   };
 
   useEffect(() => {
-    let i = 1;
+    let round = 1;
     let total = data;
     let initialFilteredArray = [];
-    while (total.length > 0) {
+    while (total?.length > 0) {
       const filtered = total
-        .filter((applicant) => applicant.round === i)
+        .filter((applicant: Applicant) => applicant.round === round)
         .map((applicant: Applicant, index: number) => {
           return { ...applicant, order: index + 1 };
         });
-      total = total.filter((applicant) => applicant.round !== i);
+      total = total.filter((applicant: Applicant) => applicant.round !== round);
       initialFilteredArray.push(filtered);
       setArrayOfFilteredData(initialFilteredArray);
-      i++;
+      round++;
     }
-    console.log('setArrayOfFilteredData');
   }, [data]);
 
   useEffect(() => {
     setListsOfCurrentTab(arrayOfFilteredData[numOfCurrentTab - 1]);
-    console.log('setListsOfCurrentTab');
   }, [arrayOfFilteredData]);
 
   useEffect(() => {
     getlistsOfCurrentPage(listsOfCurrentTab);
     setNumOfPages(Math.ceil(listsOfCurrentTab?.length / listsPerPage));
-    console.log('setListsOfCurrentPage, setNumOfPages');
   }, [numOfCurrentPage, listsOfCurrentTab]);
 
   return (
@@ -101,7 +99,6 @@ export default function ApplicantsList({ data }: any, { updateApplicantData }: a
             <th>이용수단</th>
             <th>거주지</th>
             <th>당첨여부</th>
-            <th>지원회차</th>
           </tr>
         </thead>
         <tbody>
@@ -123,7 +120,6 @@ export default function ApplicantsList({ data }: any, { updateApplicantData }: a
                   onChange={() => handleCheckboxClick(applicant.id, applicant.accepted)}
                 />
               </td>
-              <td>{applicant.round}</td>
             </tr>
           ))}
         </tbody>
