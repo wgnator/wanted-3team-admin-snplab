@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { theme } from '../styles/theme';
 
 import SearchBar from '../components/SearchBar';
-import { ApplicantsList } from '../components/ApplicantsListTemp';
+import ApplicantsList from '../components/ApplicantsList';
 import ExcelDownloadButton from '../components/ExcelDownloadButton';
 import { searchQueryType } from '../interfaces/types';
 
 export default function ApplyStatus() {
   const [query, setQuery] = useState<searchQueryType | null>(null);
+  const [data, setData] = useState();
 
   useEffect(() => {
     console.log(query);
@@ -29,9 +30,9 @@ export default function ApplyStatus() {
                 setQuery(_query);
               }}
             />
-            <ExcelDownloadButton />
+            <ExcelDownloadButton data={data} />
           </FunctionalityContainer>
-          <ApplicantsList query={query} />
+          <ApplicantsList data={data} />
         </RightSection>
       </Main>
     </Container>
@@ -67,10 +68,11 @@ const RightSection = styled.section`
   padding: 0 1.5rem;
   width: 85%;
   height: 100%;
+  > * {
+    margin: 2rem 0;
+  }
 `;
-const PageTitle = styled.h1`
-  margin: 2rem 0;
-`;
+const PageTitle = styled.h1``;
 const FunctionalityContainer = styled.div`
   width: 100%;
   display: flex;
