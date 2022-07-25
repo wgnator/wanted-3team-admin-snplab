@@ -6,11 +6,12 @@ import { dataExample } from './dataExample';
 
 export default function ApplicantsList() {
   const [data, setData] = useState<Applicant[]>([]);
+  const [numOfCurrentTab, setNumOfCurrentTab] = useState<number>(1);
   const [listsOfCurrentPage, setListsOfCurrentPage] = useState<Applicant[]>([]);
   const [numOfCurrentPage, setNumOfCurrentPage] = useState<number>(1);
   const [numOfPages, setNumOfPages] = useState<number>(0);
   const [numOfStartBtn, setNumOfStartBtn] = useState<number>(1);
-  const listsPerPage = 20;
+  const listsPerPage = 17;
 
   const handleCheckboxClick = (id: number) => {
     const newData = data.map((applicant) => {
@@ -29,16 +30,6 @@ export default function ApplicantsList() {
   };
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const data = await fetch('../../database.json');
-    //   const obj = await data.json();
-    //   const register = obj.register.map((applicant: Applicant, index: number) => {
-    //     return { ...applicant, order: index + 1 };
-    //   });
-    //   setData(register);
-    //   setNumOfPages(Math.ceil(obj.register.length / listsPerPage));
-    // };
-    // fetchData();
     const register = dataExample.map((applicant: Applicant, index: number) => {
       return { ...applicant, order: index + 1 };
     });
@@ -52,6 +43,11 @@ export default function ApplicantsList() {
 
   return (
     <Container>
+      <Tabs>
+        {new Array(3).fill('').map((_, index) => (
+          <Tab className={numOfCurrentTab === index + 1 ? 'selected' : ''}>{index + 1}차 모집</Tab>
+        ))}
+      </Tabs>
       <Table>
         <thead>
           <tr>
@@ -65,7 +61,6 @@ export default function ApplicantsList() {
             <th>이용수단</th>
             <th>거주지</th>
             <th>당첨여부</th>
-            <th>지원회차</th>
           </tr>
         </thead>
         <tbody>
@@ -87,7 +82,6 @@ export default function ApplicantsList() {
                   onChange={() => handleCheckboxClick(applicant.id)}
                 />
               </td>
-              <td>{`${applicant.round}차`}</td>
             </tr>
           ))}
         </tbody>
@@ -136,6 +130,27 @@ const Table = styled.table`
   th,
   td {
     padding: 4px;
+  }
+`;
+
+const Tabs = styled.ul`
+  display: flex;
+  justify-content: space-around;
+`;
+
+const Tab = styled.li`
+  display: inline-block;
+  width: 100%;
+  height: 3rem;
+  text-align: center;
+  line-height: 3rem;
+  font-weight: 600;
+  background-color: ${theme.backgroundLightColor};
+  color: ${theme.fontLightColor};
+  cursor: pointer;
+  &.selected {
+    background-color: ${theme.backgroundMediumColor};
+    color: ${theme.fontDarkColor};
   }
 `;
 
