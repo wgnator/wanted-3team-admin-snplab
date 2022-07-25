@@ -9,7 +9,7 @@ import useRegister from '../hooks/useRegister';
 
 export default function ApplyStatus() {
   const [query, setQuery] = useState<searchQueryType | null>(null);
-  const {applicants,searchApplicants,getApplicants} = useRegister();
+  const {applicants,getApplicants} = useRegister();
   useEffect(() => {
     console.log(query);
     getApplicants(query);

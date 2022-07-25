@@ -6,7 +6,7 @@ import useRegister from "../hooks/useRegister";
 
 export default function TestPage() {
   const {siAddress,guAddress,searchAddress,getAddressApi} = useAddress()
-  const {postApplicants,applicants,getApplicants} = useRegister();
+  const {postApplicants,applicants,getApplicants,updateApplicants} = useRegister();
   const userData = {
       "round": 1,
       "id": 7,
@@ -78,7 +78,7 @@ export default function TestPage() {
       
       <button onClick={()=>getApplicants()}>지원자 받기</button>
       <button onClick={postCheck}>포스트 보내기</button>
-      <button onClick={clickError}>에러발생</button>
+      <button onClick={()=>updateApplicants(10)}>업데이트</button>
     </div>
     
   )
