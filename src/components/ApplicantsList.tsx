@@ -4,7 +4,8 @@ import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { dataExample } from './dataExample';
 
-export default function ApplicantsList({ data, setData }) {
+export default function ApplicantsList() {
+  const [data, setData] = useState<Applicant[]>([]);
   const [listsOfCurrentPage, setListsOfCurrentPage] = useState<Applicant[]>([]);
   const [numOfCurrentPage, setNumOfCurrentPage] = useState<number>(1);
   const [numOfPages, setNumOfPages] = useState<number>(0);

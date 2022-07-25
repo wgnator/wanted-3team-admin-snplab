@@ -9,8 +9,13 @@ import { SearchQueryType } from '../interfaces/types';
 
 export default function ApplyStatus() {
   const [query, setQuery] = useState<SearchQueryType>();
-  const { applicants, getApplicants } = useRegister();
-  const updateApplicantData = () => {};
+  const { applicants, getApplicants, updateApplicants } = useRegister();
+
+  const updateApplicantData = (id: number, isAccepted: boolean) => {
+    updateApplicants(id, isAccepted);
+    getApplicants(query);
+  };
+
   useEffect(() => {
     console.log(query);
     getApplicants(query);
@@ -35,9 +40,8 @@ export default function ApplyStatus() {
                 setQuery(_query);
               }}
             />
-            <ExcelDownloadButton data={applicants} />
           </FunctionalityContainer>
-          <ApplicantsList data={applicants} />
+          <ApplicantsList data={applicants} updateApplicantData={updateApplicantData} />
         </RightSection>
       </Main>
     </Container>
