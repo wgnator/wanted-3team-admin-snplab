@@ -10,7 +10,6 @@ export default function Router() {
       <Routes>
         <Route path="/" element={<Registration />} />
         <Route path="/applicants" element={<ApplyStatus />} />
-        <Route path="/test" element={<TestPage />} />
       </Routes>
     </BrowserRouter>
   );
