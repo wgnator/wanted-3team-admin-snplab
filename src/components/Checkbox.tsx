@@ -11,19 +11,28 @@ interface CheckboxProps {
   label: string;
   isValid?: boolean;
   errorMessage?: string;
+  hasBorder?: boolean;
   onClickWrapper?: (event: MouseEvent<HTMLDivElement>) => void;
   changeInput?: () => void;
   changePage?: () => void;
 }
 
 export default forwardRef(function Checkbox(
-  { name, label, isValid, errorMessage, onClickWrapper, changeInput, changePage }: CheckboxProps,
+  { name, label, isValid, errorMessage, hasBorder = false, onClickWrapper, changeInput, changePage }: CheckboxProps,
   ref,
 ) {
   return (
     <Container onClick={onClickWrapper}>
       {!isValid && errorMessage && <ErrorMessage message={errorMessage} />}
-      <CheckboxInput type={'checkbox'} name={name} label={name} value={name} ref={ref} onChange={changeInput} />
+      <CheckboxInput
+        type={'checkbox'}
+        name={name}
+        label={name}
+        value={name}
+        ref={ref}
+        onChange={changeInput}
+        hasBorder={hasBorder}
+      />
       <Label label={label} name={name} />
 
       {changePage && (

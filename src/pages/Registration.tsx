@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Input from '../components/Input';
 import InputRadio from '../components/InputRadio';
 import { theme } from '../styles/theme';
-import { ChangeEvent, FormEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
+import { FormEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
 import { ERROR_MESSAGES, MODAL_OPTIONS, MODAL_PATHS, REGEXS } from '../constants/constants';
 import InputContainerAbst from '../components/InputContainer';
 import Modal from '../components/Modal';
@@ -124,16 +124,15 @@ export default function Registration() {
     alertDoneApply();
   };
 
-  const changeCheckbox = (event: MouseEvent<HTMLInputElement>) => {
-    const { checked, value } = event.currentTarget as { checked: boolean; value: TransportationTypes };
+  const toggleTransportation = (transportation: TransportationTypes) => {
     setTransportations((prevState) => {
-      const newState = { ...prevState, [value]: checked };
+      const newState = { ...prevState, [transportation]: !prevState[transportation] };
       const isValidTransportations = !!Object.values(newState).find(Boolean);
 
-      setInputStatus((prevState) => {
-        prevState.주교통수단.isValid = isValidTransportations;
-        prevState.주교통수단.message = checked ? '' : ERROR_MESSAGES.주교통수단;
-        return { ...prevState };
+      setInputStatus((prevInputState) => {
+        prevInputState.주교통수단.isValid = isValidTransportations;
+        prevInputState.주교통수단.message = prevState[transportation] ? '' : ERROR_MESSAGES.주교통수단;
+        return { ...prevInputState };
       });
 
       return newState;
@@ -249,6 +248,7 @@ export default function Registration() {
                         value={gender}
                         ref={genderRefs[idx]}
                         defaultChecked={!!!idx}
+                        hasBorder
                       />
                     }
                   />
@@ -335,10 +335,14 @@ export default function Registration() {
             children={
               <InputCheckboxWrapper>
                 {Object.keys(transportations).map((transportation, idx) => (
-                  <label key={idx}>
+                  <TransportationButton
+                    key={idx}
+                    type="button"
+                    onClick={() => toggleTransportation(transportation as TransportationTypes)}
+                    isActivate={transportations[transportation as TransportationTypes]}
+                  >
                     {transportation}
-                    <input name="교통수단" value={transportation} type="checkbox" onClick={changeCheckbox} />
-                  </label>
+                  </TransportationButton>
                 ))}
               </InputCheckboxWrapper>
             }
@@ -351,6 +355,7 @@ export default function Registration() {
                 label="이용약관 모두 동의"
                 ref={agreeAllRef}
                 onClickWrapper={agreeAll}
+                hasBorder
               />
             }
             checkboxes={
@@ -377,7 +382,7 @@ export default function Registration() {
             }
           />
 
-          <Button isActivate={hasValidation}>지원하기</Button>
+          <ConfirmButton isActivate={hasValidation}>지원하기</ConfirmButton>
         </Form>
       </Wrapper>
       {state?.modal && (
@@ -401,7 +406,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 450px;
+  max-width: 400px;
   overflow-y: scroll;
   background-color: white;
   margin: 0 auto;
@@ -433,12 +438,22 @@ const InputCheckboxWrapper = styled.div`
 `;
 
 const Button = styled.button<{ isActivate: boolean }>`
-  color: ${(props) => (props.isActivate ? '' : theme.fontLightColor)};
-  background-color: ${(props) => (props.isActivate ? '' : theme.buttonLightColor)};
+  color: ${(props) => (props.isActivate ? theme.buttonLightColor : theme.fontLightColor)};
+  background-color: ${(props) => (props.isActivate ? theme.buttonDarkColor : theme.buttonLightColor)};
   border: none;
   border-radius: 1rem;
   font-weight: 600;
   padding: 1rem 0;
-  pointer-events: ${(props) => (props.isActivate ? 'all' : 'none')};
   cursor: pointer;
+`;
+
+const ConfirmButton = styled(Button)`
+  pointer-events: ${(props) => (props.isActivate ? 'all' : 'none')};
+  background-color: ${(props) => (props.isActivate ? theme.buttonDarkColor : theme.buttonLightColor)};
+`;
+
+const TransportationButton = styled(Button)`
+  background-color: ${(props) => (props.isActivate ? theme.buttonDarkColor : 'transparent')};
+  border: 1px solid ${(props) => (props.isActivate ? theme.buttonDarkColor : theme.borderLightColor)};
+  padding: 0.5rem 1rem;
 `;
