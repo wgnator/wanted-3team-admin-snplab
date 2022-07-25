@@ -36,17 +36,7 @@ export default function TestPage() {
     title:"청주시"
   }
   useEffect(()=>{
-    // (() => {
-    //   address.getSi()
-    //   address.getGu("서울")
-    // })()
-    // getSi();
     getAddressApi();
-
-    // applicant.post(userData)
-    // applicant.search(search?.category,search.title)
-    // applicant.get()
-
   },[])
   
   useEffect(()=>{
@@ -65,9 +55,15 @@ export default function TestPage() {
   useEffect(()=>{
     console.log("지원자 데이터 테스트",applicants);
 
-  },[])
+  },[applicants])
   // console.log("서치 테스트",searchData);
-  
+  const seaData = {
+    category:"transportations",
+    searchString:"전동킥보드"
+  }
+  function searchApply(){
+    getApplicants(seaData)
+  }
   
   return (
     <div>
@@ -77,6 +73,7 @@ export default function TestPage() {
       <button onClick={(e)=> searchAddress(e.target?.innerText)}>대파</button>
       
       <button onClick={()=>getApplicants()}>지원자 받기</button>
+      <button onClick={()=>searchApply()}>지원자 서치</button>
       <button onClick={postCheck}>포스트 보내기</button>
       <button onClick={()=>updateApplicants(10)}>업데이트</button>
     </div>

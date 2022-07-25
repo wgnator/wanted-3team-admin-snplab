@@ -29,6 +29,6 @@ export class HttpRequest<T> {
     throw new Error(`Service Error Status Code : < ${error.response.status} > `, error);
   }
   addressError(errorMsg:string | undefined){
-    console.log(errorMsg);
+    throw new Error(errorMsg);
   }
 }
