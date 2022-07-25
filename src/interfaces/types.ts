@@ -6,10 +6,10 @@ export type Gender = '남' | '여';
 export interface Applicant {
   round: number;
   id: number;
-  date: Date;
+  date: string;
   name: string;
   gender: Gender;
-  birth: Date;
+  birth: string;
   contact: string;
   email: string;
   transportation: TransportationTypes;
