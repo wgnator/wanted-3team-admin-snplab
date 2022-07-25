@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
-
 import SearchBar from '../components/SearchBar';
 import ApplicantsList from '../components/ApplicantsList';
 import ExcelDownloadButton from '../components/ExcelDownloadButton';
 import useRegister from '../hooks/useRegister';
+import { SearchQueryType } from '../interfaces/types';
 
 export default function ApplyStatus() {
-  const [query, setQuery] = useState<searchQueryType | null>(null);
-  const {applicants,getApplicants} = useRegister();
+  const [query, setQuery] = useState<SearchQueryType>();
+  const { applicants, getApplicants, updateApplicants } = useRegister();
+
+  const updateApplicantData = (id: number, isAccepted: boolean) => {
+    updateApplicants(id, isAccepted);
+    getApplicants(query);
+  };
+
   useEffect(() => {
     console.log(query);
     getApplicants(query);
   }, [query]);
-  useEffect(()=>{
-    console.log("지원자 데이터",applicants);
-    
-  },[applicants])
+
+  useEffect(() => {
+    console.log('지원자 데이터', applicants);
+  }, [applicants]);
+
   return (
     <Container>
       <Header>
@@ -29,13 +36,12 @@ export default function ApplyStatus() {
           <PageTitle className="contents_title">AI 학습용 교통 데이터 수집을 위한 크라우드 워커 지원 현황</PageTitle>
           <FunctionalityContainer>
             <SearchBar
-              setQuery={(_query: searchQueryType) => {
+              setQuery={(_query: SearchQueryType) => {
                 setQuery(_query);
               }}
             />
-            <ExcelDownloadButton />
           </FunctionalityContainer>
-          <ApplicantsList query={query} />
+          <ApplicantsList data={applicants} updateApplicantData={updateApplicantData} />
         </RightSection>
       </Main>
     </Container>
@@ -71,10 +77,11 @@ const RightSection = styled.section`
   padding: 0 1.5rem;
   width: 85%;
   height: 100%;
+  > * {
+    margin: 2rem 0;
+  }
 `;
-const PageTitle = styled.h1`
-  margin: 2rem 0;
-`;
+const PageTitle = styled.h1``;
 const FunctionalityContainer = styled.div`
   width: 100%;
   display: flex;
@@ -83,4 +90,3 @@ const FunctionalityContainer = styled.div`
 function searchApplicant(query: searchQueryType | null) {
   throw new Error('Function not implemented.');
 }
-
