@@ -9,7 +9,7 @@ import { registerService } from "../api/axiosInstance";
 import { Applicant } from '../interfaces/types';
 export default function useRegister() {
   const [applicants,setApplicants] = React.useState<ApplicantQuery | null>(null);
-  const [postHandler,setPostHandler] = React.useState(false);
+
   function getApplicants (query?:SearchQueryType) {
     if(query){
       registerService.get(`?${query.category}_like=${query.searchString}`, (response:ResponseType)=>{
@@ -28,13 +28,15 @@ export default function useRegister() {
          
       if(response.data.length){
         console.log("겹치는 id가 있습니다");
-        setPostHandler(false);
       }else{
         registerService.post("",application)
-        setPostHandler(true);
       }
     })
   }
-    
-  return {getApplicants,postApplicants,applicants,postHandler}
+  function updateApplicants (id:number,accepted:boolean) {
+    registerService.patch(`${id}`,{
+      accepted:accepted
+    })
+  }
+  return {getApplicants,postApplicants,applicants,updateApplicants}
 };
