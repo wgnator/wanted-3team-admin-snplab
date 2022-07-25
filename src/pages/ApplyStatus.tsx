@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
-
 import SearchBar from '../components/SearchBar';
 import ApplicantsList from '../components/ApplicantsList';
 import ExcelDownloadButton from '../components/ExcelDownloadButton';
-import { searchQueryType } from '../interfaces/types';
+import useRegister from '../hooks/useRegister';
+import { SearchQueryType } from '../interfaces/types';
 
 export default function ApplyStatus() {
-  const [query, setQuery] = useState<searchQueryType | null>(null);
-  const [data, setData] = useState();
-
+  const [query, setQuery] = useState<SearchQueryType>();
+  const { applicants, getApplicants } = useRegister();
+  const updateApplicantData = () => {};
   useEffect(() => {
     console.log(query);
+    getApplicants(query);
   }, [query]);
+
+  useEffect(() => {
+    console.log('지원자 데이터', applicants);
+  }, [applicants]);
 
   return (
     <Container>
@@ -26,13 +31,13 @@ export default function ApplyStatus() {
           <PageTitle className="contents_title">AI 학습용 교통 데이터 수집을 위한 크라우드 워커 지원 현황</PageTitle>
           <FunctionalityContainer>
             <SearchBar
-              setQuery={(_query: searchQueryType) => {
+              setQuery={(_query: SearchQueryType) => {
                 setQuery(_query);
               }}
             />
-            <ExcelDownloadButton data={data} />
+            <ExcelDownloadButton data={applicants} />
           </FunctionalityContainer>
-          <ApplicantsList data={data} />
+          <ApplicantsList data={applicants} />
         </RightSection>
       </Main>
     </Container>
@@ -78,3 +83,6 @@ const FunctionalityContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+function searchApplicant(query: searchQueryType | null) {
+  throw new Error('Function not implemented.');
+}
