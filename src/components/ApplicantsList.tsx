@@ -25,12 +25,12 @@ export default function ApplicantsList({ data = dataExample }) {
   };
 
   const handleCheckboxClick = (id: number) => {
-    // const newTotalData = totalData.map((applicant) => {
-    //   if (applicant.id == id) {
-    //     return { ...applicant, accepted: !applicant['accepted'] };
-    //   } else return applicant;
-    // });
-    // setTotalData(newTotalData);
+    const newListsOfCurrentTab = listsOfCurrentTab.map((applicant) =>
+      applicant.id === id ? { ...applicant, accepted: !applicant['accepted'] } : applicant,
+    );
+    setListsOfCurrentTab(newListsOfCurrentTab);
+    arrayOfFilteredData[numOfCurrentTab - 1] = newListsOfCurrentTab;
+    setArrayOfFilteredData(arrayOfFilteredData);
   };
 
   const getlistsOfCurrentPage = (data: Applicant[]) => {
