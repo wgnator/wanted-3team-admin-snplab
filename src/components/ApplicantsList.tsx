@@ -4,49 +4,87 @@ import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { dataExample } from './dataExample';
 
-export default function ApplicantsList() {
-  const [data, setData] = useState<Applicant[]>([]);
+export default function ApplicantsList({ data = dataExample }) {
+  const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
+
+  const [listsOfCurrentTab, setListsOfCurrentTab] = useState<Applicant[]>([]);
   const [numOfCurrentTab, setNumOfCurrentTab] = useState<number>(1);
+
   const [listsOfCurrentPage, setListsOfCurrentPage] = useState<Applicant[]>([]);
   const [numOfCurrentPage, setNumOfCurrentPage] = useState<number>(1);
+
   const [numOfPages, setNumOfPages] = useState<number>(0);
   const [numOfStartBtn, setNumOfStartBtn] = useState<number>(1);
   const listsPerPage = 17;
 
+  const handleTabClick = (numOfTab: number) => {
+    setNumOfCurrentTab(numOfTab);
+    setListsOfCurrentTab(arrayOfFilteredData[numOfTab - 1]);
+    setNumOfCurrentPage(1);
+    setNumOfStartBtn(1);
+  };
+
   const handleCheckboxClick = (id: number) => {
-    const newData = data.map((applicant) => {
-      if (applicant.id == id) {
-        return { ...applicant, accepted: !applicant['accepted'] };
-      } else return applicant;
-    });
-    setData(newData);
+    // const newTotalData = totalData.map((applicant) => {
+    //   if (applicant.id == id) {
+    //     return { ...applicant, accepted: !applicant['accepted'] };
+    //   } else return applicant;
+    // });
+    // setTotalData(newTotalData);
   };
 
   const getlistsOfCurrentPage = (data: Applicant[]) => {
     const indexOfLast = numOfCurrentPage * listsPerPage;
     const indexOfFirst = indexOfLast - listsPerPage;
-    const listsOfCurrentPage = data.slice(indexOfFirst, indexOfLast);
+    const listsOfCurrentPage = data?.slice(indexOfFirst, indexOfLast);
     setListsOfCurrentPage(listsOfCurrentPage);
   };
 
   useEffect(() => {
-    const register = dataExample.map((applicant: Applicant, index: number) => {
-      return { ...applicant, order: index + 1 };
-    });
-    setData(register);
-    setNumOfPages(Math.ceil(dataExample.length / listsPerPage));
-  }, []);
+    let i = 1;
+    let total = data;
+    let initialFilteredArray = [];
+    while (total.length > 0) {
+      const filtered = total
+        .filter((applicant) => applicant.round === i)
+        .map((applicant: Applicant, index: number) => {
+          return { ...applicant, order: index + 1 };
+        });
+      total = total.filter((applicant) => applicant.round !== i);
+      initialFilteredArray.push(filtered);
+      setArrayOfFilteredData(initialFilteredArray);
+      i++;
+    }
+    console.log('setArrayOfFilteredData');
+  }, [data]);
 
   useEffect(() => {
-    getlistsOfCurrentPage(data);
-  }, [numOfCurrentPage, data]);
+    setListsOfCurrentTab(arrayOfFilteredData[numOfCurrentTab - 1]);
+    console.log('setListsOfCurrentTab');
+  }, [arrayOfFilteredData]);
+
+  useEffect(() => {
+    getlistsOfCurrentPage(listsOfCurrentTab);
+    setNumOfPages(Math.ceil(listsOfCurrentTab?.length / listsPerPage));
+    console.log('setListsOfCurrentPage, setNumOfPages');
+  }, [numOfCurrentPage, listsOfCurrentTab]);
 
   return (
     <Container>
       <Tabs>
-        {new Array(3).fill('').map((_, index) => (
-          <Tab className={numOfCurrentTab === index + 1 ? 'selected' : ''}>{index + 1}차 모집</Tab>
-        ))}
+        {arrayOfFilteredData.map(
+          (filteredData, index) =>
+            filteredData.length > 0 && (
+              <Tab
+                key={index + 1}
+                data-key={index + 1}
+                className={numOfCurrentTab === index + 1 ? 'selected' : ''}
+                onClick={(e) => handleTabClick(Number(e.target.dataset.key))}
+              >
+                {index + 1}차 모집
+              </Tab>
+            ),
+        )}
       </Tabs>
       <Table>
         <thead>
@@ -61,11 +99,12 @@ export default function ApplicantsList() {
             <th>이용수단</th>
             <th>거주지</th>
             <th>당첨여부</th>
+            <th>지원회차</th>
           </tr>
         </thead>
         <tbody>
-          {listsOfCurrentPage.map((applicant: Applicant, index: number) => (
-            <tr key={index}>
+          {listsOfCurrentPage?.map((applicant: Applicant, index: number) => (
+            <tr key={applicant.id}>
               <td>{applicant.order}</td>
               <td>{applicant.date}</td>
               <td>{applicant.name}</td>
@@ -82,6 +121,7 @@ export default function ApplicantsList() {
                   onChange={() => handleCheckboxClick(applicant.id)}
                 />
               </td>
+              <td>{applicant.round}</td>
             </tr>
           ))}
         </tbody>
