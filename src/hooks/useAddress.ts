@@ -1,12 +1,13 @@
 import React from "react";
 import { addressService } from "../api/axiosInstance";
-import { AddressObj, AddressSi, ResponseType } from "../interfaces/types";
+import { AddressSi, ResponseType } from "../interfaces/types";
 import { getMatchCity } from "../service/procAddress";
 import { useCache } from "./useCashe";
 
 const regCode = 'regcodes?regcode_pattern'
 
 export default function useAddress(){
+  const [addressLoading,setAddressLoading] = React.useState(true);
   const [siAddress , setSiAddress] = React.useState();
   const [guAddress , setGuAddres] = React.useState();
   const {saveInCache,returnCache} = useCache();
@@ -19,6 +20,7 @@ export default function useAddress(){
     addressService.get(`${regCode}=*00000000`,(response:ResponseType) => {
       setAddresData(setSiAddress,response.data)
       saveInCache("address",response.data)
+      setAddressLoading(false);
     })
   }
 
@@ -27,15 +29,13 @@ export default function useAddress(){
     setTimeout(()=>{
       const cityType:AddressSi = getMatchCity(reg,city)
       if(cityType === undefined) return addressService.addressError(`'${city}' is not found city`)
-      if(reg){
-          addressService.get(`${regCode}=${cityType?.code?.substring(0, 2)}*000000`,(response:ResponseType) => {
-          setAddresData(setGuAddres,response.data)
-          });
-        }else{
-          getAddressApi(city);
-        }
+      addressService.get(`${regCode}=${cityType?.code?.substring(0, 2)}*000000`,(response:ResponseType) => {
+        console.log(response);
+        
+      setAddresData(setGuAddres,response.data)
+      });
     },100)
   }
     
-  return {siAddress,guAddress,getAddressApi,searchAddress}
+  return {siAddress,guAddress,getAddressApi,searchAddress,isLoading: addressLoading}
 }
