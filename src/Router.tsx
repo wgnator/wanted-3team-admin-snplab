@@ -5,6 +5,7 @@ import Registration from './pages/Registration';
 import Render from './pages/Render';
 import TestPage from './pages/TestPage';
 
+
 export default function Router() {
   return (
     <BrowserRouter>
