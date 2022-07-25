@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import SearchBar from './components/SearchBar';
 import ApplyStatus from './pages/ApplyStatus';
 import Registration from './pages/Registration';
 import TestPage from './pages/TestPage';

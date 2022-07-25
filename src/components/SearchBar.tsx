@@ -2,17 +2,17 @@ import React, { FunctionComponentElement, SetStateAction, useEffect, useRef, use
 import { BiSearch } from 'react-icons/bi';
 import { GoTriangleDown } from 'react-icons/go';
 import styled from 'styled-components';
-import { SearchCategory, SearchQueryType } from '../interfaces/types';
+import { searchQueryType } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { getInputComponent } from './SearchBarInputComponents';
 
 type SearchBarProps = {
-  setQuery: (value: SearchQueryType) => void;
+  setQuery: (value: searchQueryType) => void;
 };
 
 export default function SearchBar({ setQuery }: SearchBarProps) {
-  const [fieldToSearch, setFieldToSearch] = useState<SearchCategory>(SearchCategory.NAME);
-  const [inputValue, setInputValue] = useState<string>('');
+  const [fieldToSearch, setFieldToSearch] = useState('name');
+  const [inputValue, setInputValue] = useState('');
   const [inputComponent, setInputComponent] =
     useState<FunctionComponentElement<{ setValue: SetStateAction<string> }>>();
   const formRef = useRef<HTMLFormElement>(null);
@@ -20,7 +20,7 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
   const handleFieldToSearchChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const temp = event.target.value;
     formRef.current?.reset();
-    setFieldToSearch(temp as SearchCategory);
+    setFieldToSearch(temp);
   };
 
   const submit = (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -38,6 +38,7 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
   useEffect(() => {
     setInputComponent(getInputComponent(fieldToSearch, setInputValue));
     setInputValue('');
+    console.log(inputValue);
   }, [fieldToSearch]);
 
   return (
@@ -48,18 +49,18 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
         }}
       >
         <FieldToSearchPicker value={fieldToSearch} onChange={handleFieldToSearchChange}>
-          <option value={SearchCategory.NAME}>지원자명</option>
-          <option value={SearchCategory.DATE}>지원날짜</option>
-          <option value={SearchCategory.GENDER}>성별</option>
-          <option value={SearchCategory.BIRTH}>생년월일</option>
-          <option value={SearchCategory.TRANSPORTATION}>이용수단</option>
-          <option value={SearchCategory.ADDRESS}>거주지</option>
+          <option value="name">지원자명</option>
+          <option value="date">지원날짜</option>
+          <option value="gender">성별</option>
+          <option value="birth">생년월일</option>
+          <option value="transportation">이용수단</option>
+          <option value="address">거주지</option>
         </FieldToSearchPicker>
         <GoTriangleDown style={{ position: 'relative', left: '-1rem', fontSize: '0.6rem' }} />
         <InputWrapper>{inputComponent}</InputWrapper>
 
         <SubmitButton>
-          <BiSearch style={{ color: theme.borderDarkColor }} />
+          <BiSearch style={{ color: theme.borderLightColor }} />
         </SubmitButton>
       </Box>
     </form>

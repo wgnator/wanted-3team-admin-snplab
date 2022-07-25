@@ -41,7 +41,9 @@ export default function ApplyStatus() {
               }}
             />
           </FunctionalityContainer>
-          <ApplicantsList data={applicants} updateApplicantData={updateApplicantData} />
+          <ApplicantsList
+          // data={applicants} updateApplicantData={updateApplicantData}
+          />
         </RightSection>
       </Main>
     </Container>
