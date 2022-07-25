@@ -1,5 +1,5 @@
 import { getDaysInMonth } from 'date-fns';
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
 import { getArrayOfEveryIntegerBetween } from '../utils/utils';
@@ -128,7 +128,10 @@ const InputComponentSelector = {
   address: (setValue: SetStateAction<string>) => <TextInput placeholder="주소명(시 또는 구)" setValue={setValue} />,
 };
 
-export const getInputComponent = (fieldToSearch: InputComponentSelectorTypes, setValue: SetStateAction<string>) => {
+export const getInputComponent = (
+  fieldToSearch: InputComponentSelectorTypes,
+  setValue: Dispatch<SetStateAction<string>>,
+) => {
   if (fieldToSearch in InputComponentSelector) return InputComponentSelector[fieldToSearch](setValue);
 };
 
