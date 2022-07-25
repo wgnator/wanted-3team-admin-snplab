@@ -27,7 +27,7 @@ export default forwardRef(function Checkbox(
       <Label label={label} name={name} />
 
       {changePage && (
-        <CheckButton isActivate={true}>
+        <CheckButton type="button" isActivate={true}>
           <BiChevronRight onClick={changePage} />
         </CheckButton>
       )}
