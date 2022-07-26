@@ -70,7 +70,7 @@ export default function ApplicantsList({ data, updateApplicantData }: Applicants
     setNumOfPages(Math.ceil(listsOfCurrentTab?.length / listsPerPage));
   }, [numOfCurrentPage, listsOfCurrentTab]);
 
-  return (
+  return data?.length > 0 ? (
     <Container>
       <Tabs>
         {arrayOfFilteredData.map(
@@ -152,6 +152,10 @@ export default function ApplicantsList({ data, updateApplicantData }: Applicants
           &gt;
         </Arrow>
       </Pagination>
+    </Container>
+  ) : (
+    <Container>
+      <p>검색 결과가 없습니다.</p>
     </Container>
   );
 }
