@@ -9,7 +9,7 @@ import { SearchQueryType } from '../interfaces/types';
 
 export default function ApplyStatus() {
   const [query, setQuery] = useState<SearchQueryType>();
-  const { applicants, getApplicants, updateApplicants } = useRegister();
+  const { applicants, getApplicants, updateApplicants, applyLoading } = useRegister();
 
   const updateApplicantData = (id: number, isAccepted: boolean) => {
     updateApplicants(id, isAccepted);
@@ -41,7 +41,7 @@ export default function ApplyStatus() {
               }}
             />
           </FunctionalityContainer>
-          <ApplicantsList data={applicants} updateApplicantData={updateApplicantData} />
+          <ApplicantsList data={applicants} isLoading={applyLoading} updateApplicantData={updateApplicantData} />
         </RightSection>
       </Main>
     </Container>
