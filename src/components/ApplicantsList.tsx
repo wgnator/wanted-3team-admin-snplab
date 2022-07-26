@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
 
+type ApplicantsListProps = { data: Applicant[]; updateApplicantData: (id: number, isAccepted: boolean) => void };
+
 export default function ApplicantsList({ data, updateApplicantData }: ApplicantsListProps) {
   const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
 
@@ -110,7 +112,7 @@ export default function ApplicantsList({ data, updateApplicantData }: Applicants
               <td>{applicant.birth}</td>
               <td>{applicant.contact}</td>
               <td>{applicant.email}</td>
-              <td>{applicant.transportation}</td>
+              <td>{applicant.transportation.join(', ')}</td>
               <td>{applicant.address}</td>
               <td>
                 <input
