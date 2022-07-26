@@ -1,33 +1,78 @@
 {
   "register": [
     {
-      "name": "홍길동",
-      "gender": "남자",
-      "birth": "19890422",
-      "contact": "01012345678",
-      "email": "gildongkim@naver.com",
-      "transportations": [
-        "버스",
-        "지하철",
-        "자전거",
-        "전동킥보드"
-      ],
-      "id": 10,
-      "accepted": false
+      "round": 1,
+      "name": "대월",
+      "birth": "1991.02.01",
+      "contact": "010-4987-4675",
+      "email": "daewal@gmail.com",
+      "transportation": "자전거",
+      "address": "서울특별시",
+      "date": "22.07.26",
+      "id": 1
     },
     {
-      "name": "배길동",
-      "gender": "남자",
-      "birth": "19890422",
-      "contact": "01012347789",
-      "email": "gildongship@ship.com",
-      "transportations": [
-        "KTX/기차",
+      "round": 1,
+      "name": "홍길동",
+      "birth": "1987.01.21",
+      "contact": "010-7797-3291",
+      "email": "gildong@gmail.com",
+      "transportation": [
+        "자전거",
         "도보",
-        "전동킥보드",
+        "전동킥보드"
+      ],
+      "address": "청주시",
+      "date": "22.07.26",
+      "id": 2
+    },
+    {
+      "round": 1,
+      "name": "배길동",
+      "birth": "1987.01.21",
+      "contact": "010-4467-1145",
+      "email": "gildong@naver.com",
+      "transportation": "도보",
+      "address": "청주시",
+      "date": "22.07.26",
+      "id": 3
+    },
+    {
+      "round": 1,
+      "name": "김석",
+      "birth": "1977.02.27",
+      "contact": "010-1512-1116",
+      "email": "sukim@naver.com",
+      "transportation": "자가용",
+      "address": "대전광역시",
+      "date": "22.07.26",
+      "id": 4
+    },
+    {
+      "round": 1,
+      "name": "김석",
+      "birth": "1977.02.27",
+      "contact": "010-1512-1116",
+      "email": "sukim@naver.com",
+      "transportation": [
         "자가용"
       ],
-      "id": 11
+      "address": "대전광역시",
+      "date": "22.07.26",
+      "id": 5
+    },
+    {
+      "round": 1,
+      "name": "김재석",
+      "birth": "1968.07.27",
+      "contact": "010-1512-1116",
+      "email": "sukim@naver.com",
+      "transportation": [
+        "자가용"
+      ],
+      "address": "대전광역시",
+      "date": "2022.07.26",
+      "id": 7
     }
   ]
 }

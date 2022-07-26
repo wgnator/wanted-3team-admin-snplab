@@ -30,8 +30,6 @@ export default function useAddress(){
       const cityType:AddressSi = getMatchCity(reg,city)
       if(cityType === undefined) return addressService.addressError(`'${city}' is not found city`)
       addressService.get(`${regCode}=${cityType?.code?.substring(0, 2)}*000000`,(response:ResponseType) => {
-        console.log(response);
-        
       setAddresData(setGuAddres,response.data)
       });
     },100)
