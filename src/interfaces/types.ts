@@ -6,10 +6,10 @@ export type Gender = '남' | '여';
 export interface Applicant {
   round: number;
   id: number;
-  date: Date;
+  date: string;
   name: string;
   gender: Gender;
-  birth: Date;
+  birth: string;
   contact: string;
   email: string;
   transportation: TransportationTypes;
@@ -35,7 +35,7 @@ export enum SearchCategory {
 }
 export interface SearchQueryType {
   category: string;
-  searchString: string
+  searchString: string;
 }
 type regcode = 'code:string' & 'name:stirng';
 export interface AddressSi {
@@ -51,7 +51,7 @@ export interface AddressObj {
   getAddressSi: () => {};
   getAddressGu: any;
 }
-export type ApplicantQuery = 'all:Applicant' & 'search:Applicant'
+export type ApplicantQuery = 'all:Applicant' & 'search:Applicant';
 // export interface ApplicantQuery {
 //   all:Applicant | undefined
 //   search:Applicant | undefined,
