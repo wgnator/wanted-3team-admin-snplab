@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { REGION } from '../constants/constants';
 import { theme } from '../styles/theme';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { CloseButton as CCloseButton, Navigation as NNavigation } from './PolicyConfirm';
 import { RefObject } from 'react';
 

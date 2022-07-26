@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import Input from '../components/Input';
 import InputRadio from '../components/InputRadio';
 import { theme } from '../styles/theme';
-import { FormEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
-import { ERROR_MESSAGES, MODAL_OPTIONS, MODAL_PATHS, REGEXS } from '../constants/constants';
+import { FormEvent, KeyboardEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
+import { ERROR_MESSAGES, keyCodes, MODAL_OPTIONS, MODAL_PATHS, REGEXS } from '../constants/constants';
 import InputContainerAbst from '../components/InputContainer';
 import Modal from '../components/Modal';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -14,9 +14,9 @@ import Checkbox from '../components/Checkbox';
 import CheckboxContainer from '../components/CheckboxContainer';
 import AddressSelector from '../components/AddressSelector';
 import AlertApply from '../components/AlertApply';
-
-
-type TransportationTypes = '버스' | '지하철' | '택시' | 'KTX/기차' | '도보' | '자전거' | '전동킥보드' | '자가용';
+import debouunce from '../utils/debounce';
+import useRegister from '../hooks/useRegister';
+import { TransportationTypes } from '../interfaces/types';
 
 interface Transportations {
   버스: boolean;
@@ -47,7 +47,7 @@ export default function Registration() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { modal: keyof typeof PersonalInformationPolicy };
-  const {postApplicants,applicantsHandler} = useRegister();
+  const { postApplicants } = useRegister();
   const [inputStatus, setInputStatus] = useState({
     이름: { isValid: false, message: '' },
     생년월일: { isValid: false, message: '' },
@@ -86,12 +86,30 @@ export default function Registration() {
 
   const checkValidation = (name: InputValidationTypes, value: string) => new RegExp(REGEXS[name]).test(value);
 
-  // 이렇게 ref 쓰는 것이 이득이 있는지?
-  // const validateInput = (ref: RefObject(HTMLInputElement)) => {
+  const addDotToBirth = (event: KeyboardEvent<HTMLInputElement>, ref: RefObject<HTMLInputElement>) => {
+    if (!ref.current?.value) return;
+    const { value } = ref.current;
+    const { key, code } = event;
+
+    if (code === keyCodes.backspace) {
+      return;
+    }
+    if (code === keyCodes.space) {
+      event.preventDefault();
+      return;
+    }
+
+    if (+key >= 0 && +key <= 9) {
+      if (ref.current.value.includes(' ')) ref.current.value = ref.current.value.trim();
+      if (value.length === 4 || value.length === 7) {
+        ref.current.value = ref.current.value + '.';
+      }
+      return;
+    }
+  };
+
   const validateInput = (ref: RefObject<HTMLInputElement>) => {
-    console.log('드러옴?');
     if (!ref.current) return;
-    console.log('드러오고 통과함');
     const { name, value } = ref.current as { name: InputValidationTypes; value: string };
 
     const passedValidation = checkValidation(name, value);
@@ -120,9 +138,10 @@ export default function Registration() {
         .filter(([transportation, isValid]) => isValid && transportation)
         .map((transportation) => transportation[0]),
     };
-    postApplicants(postData)
-    console.log("성공적으로 보냇는가 ? :", applicantsHandler);
-    
+
+    // @ts-ignore
+    postApplicants(postData);
+
     console.log('폼 최종', postData);
     alertDoneApply();
   };
@@ -201,9 +220,9 @@ export default function Registration() {
         return <PolicyConfirm innerHtml={PersonalInformationPolicy[modalPath]} />;
     }
   };
+
   useEffect(() => {
     const validLength = Object.values(inputStatus).filter((input) => !input.isValid).length;
-    console.log('valid length', validLength, Object.entries(inputStatus));
 
     if (validLength === 0) return setHasValidation(true);
     hasValidation === true && setHasValidation(false);
@@ -227,7 +246,14 @@ export default function Registration() {
                 name="이름"
                 type={'text'}
                 placeholder="홍길동"
-                onChange={() => validateInput(nameRef)}
+                onChange={() =>
+                  debouunce({
+                    callback() {
+                      return validateInput(nameRef);
+                    },
+                    timeout: 300,
+                  })
+                }
                 ref={nameRef}
                 required
               />
@@ -271,6 +297,7 @@ export default function Registration() {
                 placeholder="YYYY.MM.DD"
                 ref={birthRef}
                 onChange={() => validateInput(birthRef)}
+                onKeyDown={(event) => addDotToBirth(event, birthRef)}
               />
             }
           />
