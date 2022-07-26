@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
-import { dataExample } from './dataExample';
 
-export default function ApplicantsList({ data }: any, { updateApplicantData }: any) {
+export default function ApplicantsList({ data, updateApplicantData }: ApplicantsListProps) {
   const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
 
   //listsOfCurrentTab csv 다운로드!!
