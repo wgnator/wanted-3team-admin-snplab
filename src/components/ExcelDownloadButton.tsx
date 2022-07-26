@@ -1,12 +1,13 @@
 import styled from 'styled-components';
+import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { exportToCsv } from '../utils/exportToCsv';
 
-export default function ExcelDownloadButton() {
-  return <Container onClick={() => exportToCsv()}>엑셀 다운로드</Container>;
+export default function ExcelDownloadButton({ data }: { data: Applicant }) {
+  return <Button onClick={() => exportToCsv(data)}>엑셀 다운로드</Button>;
 }
 
-const Container = styled.button`
+const Button = styled.button`
   background-color: ${theme.backgroundDarkColor};
   color: ${theme.fontDarkColor};
   font-weight: bold;

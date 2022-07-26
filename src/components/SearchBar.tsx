@@ -2,12 +2,12 @@ import React, { FunctionComponentElement, SetStateAction, useEffect, useRef, use
 import { BiSearch } from 'react-icons/bi';
 import { GoTriangleDown } from 'react-icons/go';
 import styled from 'styled-components';
-import { SearchCategory, searchQueryType } from '../interfaces/types';
+import { SearchCategory, SearchQueryType } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { getInputComponent } from './SearchBarInputComponents';
 
 type SearchBarProps = {
-  setQuery: (value: searchQueryType) => void;
+  setQuery: (value: SearchQueryType) => void;
 };
 
 export default function SearchBar({ setQuery }: SearchBarProps) {
@@ -20,7 +20,7 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
   const handleFieldToSearchChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const temp = event.target.value;
     formRef.current?.reset();
-    setFieldToSearch(temp);
+    setFieldToSearch(temp as SearchCategory);
   };
 
   const submit = (event: React.ChangeEvent<HTMLFormElement>) => {
