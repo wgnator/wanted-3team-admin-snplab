@@ -13,9 +13,9 @@ export default function PolicyConfirm({ innerHtml }: PolicyConfirmProps) {
   return (
     <Container>
       <Navigation>
-        <Button onClick={closeModal}>
+        <CloseButton onClick={closeModal}>
           <FiChevronLeft />
-        </Button>
+        </CloseButton>
         <Title>서비스 이용약관</Title>
       </Navigation>
       <p dangerouslySetInnerHTML={{ __html: innerHtml }} />
@@ -24,19 +24,22 @@ export default function PolicyConfirm({ innerHtml }: PolicyConfirmProps) {
 }
 
 const Container = styled.div`
+  background-color: white;
   p {
     padding: 1rem 1rem 0 1rem;
   }
 `;
-const Navigation = styled.div`
+export const Navigation = styled.div`
   display: flex;
+  align-items: center;
   border-bottom: 1px solid ${theme.borderDarkColor};
   padding: 1rem 1rem;
   gap: 1rem;
 `;
-const Button = styled.button`
+export const CloseButton = styled.button`
   cursor: pointer;
   border: none;
   background-color: transparent;
+  font-size: 1.5rem;
 `;
 const Title = styled.div``;
