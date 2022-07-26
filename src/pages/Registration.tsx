@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import Input from '../components/Input';
 import InputRadio from '../components/InputRadio';
 import { theme } from '../styles/theme';
-import { ChangeEvent, FormEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
-import { ERROR_MESSAGES, PRIVACY_POLICY, REGEXS } from '../constants/constants';
+import { FormEvent, MouseEvent, RefObject, useEffect, useRef, useState } from 'react';
+import { ERROR_MESSAGES, MODAL_OPTIONS, MODAL_PATHS, REGEXS } from '../constants/constants';
 import InputContainerAbst from '../components/InputContainer';
 import Modal from '../components/Modal';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,7 +12,9 @@ import PolicyConfirm from '../components/PolicyConfirm';
 import CheckboxInput from '../components/CheckboxInput';
 import Checkbox from '../components/Checkbox';
 import CheckboxContainer from '../components/CheckboxContainer';
-import useRegister from '../hooks/useRegister';
+import AddressSelector from '../components/AddressSelector';
+import AlertApply from '../components/AlertApply';
+
 
 type TransportationTypes = '버스' | '지하철' | '택시' | 'KTX/기차' | '도보' | '자전거' | '전동킥보드' | '자가용';
 
@@ -84,9 +86,13 @@ export default function Registration() {
 
   const checkValidation = (name: InputValidationTypes, value: string) => new RegExp(REGEXS[name]).test(value);
 
-  const validateInput = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!event.currentTarget) return;
-    const { name, value } = event.currentTarget as { name: InputValidationTypes; value: string };
+  // 이렇게 ref 쓰는 것이 이득이 있는지?
+  // const validateInput = (ref: RefObject(HTMLInputElement)) => {
+  const validateInput = (ref: RefObject<HTMLInputElement>) => {
+    console.log('드러옴?');
+    if (!ref.current) return;
+    console.log('드러오고 통과함');
+    const { name, value } = ref.current as { name: InputValidationTypes; value: string };
 
     const passedValidation = checkValidation(name, value);
     if (inputStatus[name].isValid === passedValidation) return;
@@ -118,18 +124,18 @@ export default function Registration() {
     console.log("성공적으로 보냇는가 ? :", applicantsHandler);
     
     console.log('폼 최종', postData);
+    alertDoneApply();
   };
 
-  const changeCheckbox = (event: MouseEvent<HTMLInputElement>) => {
-    const { checked, value } = event.currentTarget as { checked: boolean; value: TransportationTypes };
+  const toggleTransportation = (transportation: TransportationTypes) => {
     setTransportations((prevState) => {
-      const newState = { ...prevState, [value]: checked };
+      const newState = { ...prevState, [transportation]: !prevState[transportation] };
       const isValidTransportations = !!Object.values(newState).find(Boolean);
 
-      setInputStatus((prevState) => {
-        prevState.주교통수단.isValid = isValidTransportations;
-        prevState.주교통수단.message = checked ? '' : ERROR_MESSAGES.주교통수단;
-        return { ...prevState };
+      setInputStatus((prevInputState) => {
+        prevInputState.주교통수단.isValid = isValidTransportations;
+        prevInputState.주교통수단.message = prevState[transportation] ? '' : ERROR_MESSAGES.주교통수단;
+        return { ...prevInputState };
       });
 
       return newState;
@@ -170,10 +176,30 @@ export default function Registration() {
   };
 
   const seePersonalInformation = () => {
-    navigate('', { state: { modal: PRIVACY_POLICY.개인정보처리방침 } });
+    navigate('', { state: { modal: MODAL_PATHS.개인정보처리방침 } });
   };
   const seeConsentToProvideInformation = () => {
-    navigate('', { state: { modal: PRIVACY_POLICY.제3자정보제공 } });
+    navigate('', { state: { modal: MODAL_PATHS.제3자정보제공 } });
+  };
+  const alertDoneApply = () => {
+    navigate('', { state: { modal: MODAL_PATHS.doneAlly } });
+  };
+  const seeAddressSelector = () => {
+    addressRef.current?.blur();
+    navigate('', { state: { modal: MODAL_PATHS.adressSelector } });
+  };
+
+  const selectModalComponent = (modalPath: keyof typeof MODAL_PATHS) => {
+    switch (modalPath) {
+      case MODAL_PATHS.doneAlly:
+        return <AlertApply callback={() => navigate(MODAL_OPTIONS.doneAlly.goWhenClosing)} />;
+      case MODAL_PATHS.adressSelector:
+        return <AddressSelector ref={addressRef} validInput={() => validateInput(addressRef)} />;
+      case MODAL_PATHS.개인정보처리방침:
+        return <PolicyConfirm innerHtml={PersonalInformationPolicy[modalPath]} />;
+      case MODAL_PATHS.제3자정보제공:
+        return <PolicyConfirm innerHtml={PersonalInformationPolicy[modalPath]} />;
+    }
   };
   useEffect(() => {
     const validLength = Object.values(inputStatus).filter((input) => !input.isValid).length;
@@ -197,7 +223,14 @@ export default function Registration() {
             name="이름"
             label="이름"
             children={
-              <Input name="이름" type={'text'} placeholder="홍길동" onChange={validateInput} ref={nameRef} required />
+              <Input
+                name="이름"
+                type={'text'}
+                placeholder="홍길동"
+                onChange={() => validateInput(nameRef)}
+                ref={nameRef}
+                required
+              />
             }
           />
           <InputContainerAbst
@@ -218,6 +251,7 @@ export default function Registration() {
                         value={gender}
                         ref={genderRefs[idx]}
                         defaultChecked={!!!idx}
+                        hasBorder
                       />
                     }
                   />
@@ -231,7 +265,13 @@ export default function Registration() {
             name="생년월일"
             label="생년월일"
             children={
-              <Input name="생년월일" type={'string'} placeholder="YYYY.MM.DD" ref={birthRef} onChange={validateInput} />
+              <Input
+                name="생년월일"
+                type={'string'}
+                placeholder="YYYY.MM.DD"
+                ref={birthRef}
+                onChange={() => validateInput(birthRef)}
+              />
             }
           />
           <InputContainerAbst
@@ -245,8 +285,16 @@ export default function Registration() {
                 type={'text'}
                 placeholder="겨주지역 선택"
                 ref={addressRef}
-                onChange={validateInput}
+                onClick={seeAddressSelector}
+                onFocus={seeAddressSelector}
               />
+              // <Input
+              //   name="거주지역"
+              //   type={'text'}
+              //   placeholder="겨주지역 선택"
+              //   ref={addressRef}
+              //   onChange={validateInput}
+              // />
             }
           />
 
@@ -261,7 +309,7 @@ export default function Registration() {
                 type={'string'}
                 placeholder="'-'없이 입력해 주세요"
                 ref={contactRef}
-                onChange={validateInput}
+                onChange={() => validateInput(contactRef)}
               />
             }
           />
@@ -277,7 +325,7 @@ export default function Registration() {
                 type={'email'}
                 placeholder="MYD@snplap.com"
                 ref={emailRef}
-                onChange={validateInput}
+                onChange={() => validateInput(emailRef)}
               />
             }
           />
@@ -290,10 +338,14 @@ export default function Registration() {
             children={
               <InputCheckboxWrapper>
                 {Object.keys(transportations).map((transportation, idx) => (
-                  <label key={idx}>
+                  <TransportationButton
+                    key={idx}
+                    type="button"
+                    onClick={() => toggleTransportation(transportation as TransportationTypes)}
+                    isActivate={transportations[transportation as TransportationTypes]}
+                  >
                     {transportation}
-                    <input name="교통수단" value={transportation} type="checkbox" onClick={changeCheckbox} />
-                  </label>
+                  </TransportationButton>
                 ))}
               </InputCheckboxWrapper>
             }
@@ -306,12 +358,13 @@ export default function Registration() {
                 label="이용약관 모두 동의"
                 ref={agreeAllRef}
                 onClickWrapper={agreeAll}
+                hasBorder
               />
             }
             checkboxes={
               <>
                 <Checkbox
-                  name={PRIVACY_POLICY.개인정보처리방침}
+                  name={MODAL_PATHS.개인정보처리방침}
                   label="개인정보 처리방침 고지 (필수)"
                   isValid={inputStatus.개인정보처리방침.isValid}
                   errorMessage={inputStatus.개인정보처리방침.message}
@@ -320,7 +373,7 @@ export default function Registration() {
                   changePage={seePersonalInformation}
                 />
                 <Checkbox
-                  name={PRIVACY_POLICY.제3자정보제공}
+                  name={MODAL_PATHS.제3자정보제공}
                   label="제3자 정보제공 동의 (필수)"
                   isValid={inputStatus.제3자정보제공.isValid}
                   errorMessage={inputStatus.제3자정보제공.message}
@@ -332,11 +385,18 @@ export default function Registration() {
             }
           />
 
-          <Button isActivate={hasValidation}>지원하기</Button>
+          <ConfirmButton isActivate={hasValidation}>지원하기</ConfirmButton>
         </Form>
       </Wrapper>
       {state?.modal && (
-        <Modal height="100%" children={<PolicyConfirm innerHtml={PersonalInformationPolicy[state.modal]} />} />
+        <>
+          <Modal
+            height={MODAL_OPTIONS[state.modal].height}
+            contentPosition={MODAL_OPTIONS[state.modal].position}
+            goWhenClosing={MODAL_OPTIONS[state.modal].goWhenClosing}
+            children={selectModalComponent(state.modal)}
+          />
+        </>
       )}
     </Container>
   );
@@ -349,7 +409,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 450px;
+  max-width: 400px;
   overflow-y: scroll;
   background-color: white;
   margin: 0 auto;
@@ -381,12 +441,22 @@ const InputCheckboxWrapper = styled.div`
 `;
 
 const Button = styled.button<{ isActivate: boolean }>`
-  color: ${(props) => (props.isActivate ? '' : theme.fontLightColor)};
-  background-color: ${(props) => (props.isActivate ? '' : theme.buttonLightColor)};
+  color: ${(props) => (props.isActivate ? theme.buttonLightColor : theme.fontLightColor)};
+  background-color: ${(props) => (props.isActivate ? theme.buttonDarkColor : theme.buttonLightColor)};
   border: none;
   border-radius: 1rem;
   font-weight: 600;
   padding: 1rem 0;
-  pointer-events: ${(props) => (props.isActivate ? 'all' : 'none')};
   cursor: pointer;
+`;
+
+const ConfirmButton = styled(Button)`
+  pointer-events: ${(props) => (props.isActivate ? 'all' : 'none')};
+  background-color: ${(props) => (props.isActivate ? theme.buttonDarkColor : theme.buttonLightColor)};
+`;
+
+const TransportationButton = styled(Button)`
+  background-color: ${(props) => (props.isActivate ? theme.buttonDarkColor : 'transparent')};
+  border: 1px solid ${(props) => (props.isActivate ? theme.buttonDarkColor : theme.borderLightColor)};
+  padding: 0.5rem 1rem;
 `;

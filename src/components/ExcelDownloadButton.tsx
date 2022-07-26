@@ -3,7 +3,7 @@ import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import { exportToCsv } from '../utils/exportToCsv';
 
-export default function ExcelDownloadButton({ data }: { data: Applicant }) {
+export default function ExcelDownloadButton({ data }: { data: Applicant[] }) {
   return <Button onClick={() => exportToCsv(data)}>엑셀 다운로드</Button>;
 }
 
