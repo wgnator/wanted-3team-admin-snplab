@@ -4,7 +4,8 @@ import { GoTriangleDown } from 'react-icons/go';
 import styled from 'styled-components';
 import { SearchCategory, SearchQueryType } from '../interfaces/types';
 import { theme } from '../styles/theme';
-import { getInputComponent } from './SearchBarInputComponents';
+import { convertToDottedFormat } from '../utils/utils';
+import { DateInput, RadioInput, TextInput, CheckboxInput } from './SearchBarInputComponents';
 
 type SearchBarProps = {
   setQuery: (value: SearchQueryType) => void;
@@ -13,35 +14,55 @@ type SearchBarProps = {
 export default function SearchBar({ setQuery }: SearchBarProps) {
   const [fieldToSearch, setFieldToSearch] = useState<SearchCategory>(SearchCategory.NAME);
   const [inputValue, setInputValue] = useState<string>('');
-  const [inputComponent, setInputComponent] =
-    useState<FunctionComponentElement<{ setValue: SetStateAction<string> }>>();
-  const formRef = useRef<HTMLFormElement>(null);
 
   const handleFieldToSearchChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const temp = event.target.value;
-    formRef.current?.reset();
-    setFieldToSearch(temp as SearchCategory);
+    setFieldToSearch(event.target.value as SearchCategory);
   };
 
   const submit = (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (inputValue) setQuery({ category: fieldToSearch, searchString: inputValue });
+    const processedValue = processInputValue(inputValue);
+    if (inputValue) setQuery({ category: fieldToSearch, searchString: processedValue });
     else alertUser();
     setInputValue('');
-    formRef.current?.reset();
   };
 
+  const processInputValue = (inputValue: any) => {
+    if (fieldToSearch === 'name') return inputValue;
+    if (fieldToSearch === 'date') return convertToDottedFormat(inputValue);
+    if (fieldToSearch === 'gender') return inputValue;
+    if (fieldToSearch === 'birth') return convertToDottedFormat(inputValue);
+    if (fieldToSearch === 'transportation')
+      return inputValue.filter((state) => state.checked === true).map((checkboxState) => checkboxState.value);
+    if (fieldToSearch === 'address') return inputValue;
+  };
+  // const initializeValue = (fieldToSearch) => {
+  //   if (fieldToSearch === 'name') return '';
+  //   if (fieldToSearch === 'date') return {
+  //     year: '2022',
+  //     month: '',
+  //     day: '',
+  //   };
+  //   if (fieldToSearch === 'gender') return '';
+  //   if (fieldToSearch === 'birth') return {
+  //     year: '2022',
+  //     month: '',
+  //     day: '',
+  //   };
+  //   if (fieldToSearch === 'transportation') return
+  //     return inputValue.filter((state) => state.checked === true).map((checkboxState) => checkboxState.value);
+  //   if (fieldToSearch === 'address') return inputValue;
+  // }
   const alertUser = () => {
     window.alert('입력이 잘못됐습니다.');
   };
 
   useEffect(() => {
-    setInputComponent(getInputComponent(fieldToSearch, setInputValue));
     setInputValue('');
   }, [fieldToSearch]);
 
   return (
-    <form ref={formRef} onSubmit={submit}>
+    <form onSubmit={submit}>
       <Box
         onClick={(e) => {
           e.stopPropagation();
@@ -56,7 +77,38 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
           <option value={SearchCategory.ADDRESS}>거주지</option>
         </FieldToSearchPicker>
         <GoTriangleDown style={{ position: 'relative', left: '-1rem', fontSize: '0.6rem' }} />
-        <InputWrapper>{inputComponent}</InputWrapper>
+        <InputWrapper>
+          {(() => {
+            switch (fieldToSearch) {
+              case 'name':
+                return <TextInput placeholder="이름 입력" setValue={setInputValue} value={inputValue} />;
+              case 'date':
+                return <DateInput yearsRange={[2021, 2022]} setValue={setInputValue} value={inputValue} />;
+              case 'gender':
+                return (
+                  <RadioInput
+                    fieldSetName="gender"
+                    options={['남', '여']}
+                    setValue={setInputValue}
+                    value={inputValue}
+                  />
+                );
+              case 'birth':
+                return <DateInput yearsRange={[1922, 2022]} setValue={setInputValue} value={inputValue} />;
+              case 'transportation':
+                return (
+                  <CheckboxInput
+                    fieldSetName="transportation"
+                    options={['자가용', '버스', '지하철', '택시', '자전거', 'KTX/기차', '전동킥보드', '도보']}
+                    setValue={setInputValue}
+                    value={inputValue}
+                  />
+                );
+              case 'address':
+                return <TextInput placeholder="주소명(시 또는 구)" setValue={setInputValue} value={inputValue} />;
+            }
+          })()}
+        </InputWrapper>
 
         <SubmitButton>
           <BiSearch style={{ color: theme.borderDarkColor }} />

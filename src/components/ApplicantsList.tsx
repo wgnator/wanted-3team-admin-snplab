@@ -2,56 +2,91 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
-import { dataExample } from './dataExample';
 
-export default function ApplicantsList() {
-  const [data, setData] = useState<Applicant[]>([]);
+type ApplicantsListProps = { data: Applicant[]; updateApplicantData: (id: number, isAccepted: boolean) => void };
+
+export default function ApplicantsList({ data, updateApplicantData }: ApplicantsListProps) {
+  const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
+
+  //listsOfCurrentTab csv 다운로드!!
+  const [listsOfCurrentTab, setListsOfCurrentTab] = useState<Applicant[]>([]);
+  const [numOfCurrentTab, setNumOfCurrentTab] = useState<number>(1);
+
   const [listsOfCurrentPage, setListsOfCurrentPage] = useState<Applicant[]>([]);
   const [numOfCurrentPage, setNumOfCurrentPage] = useState<number>(1);
+
   const [numOfPages, setNumOfPages] = useState<number>(0);
   const [numOfStartBtn, setNumOfStartBtn] = useState<number>(1);
-  const listsPerPage = 20;
+  const listsPerPage = 17;
 
-  const handleCheckboxClick = (id: number) => {
-    const newData = data.map((applicant) => {
-      if (applicant.id == id) {
-        return { ...applicant, accepted: !applicant['accepted'] };
-      } else return applicant;
-    });
-    setData(newData);
+  const handleTabClick = (numOfTab: number) => {
+    setNumOfCurrentTab(numOfTab);
+    setListsOfCurrentTab(arrayOfFilteredData[numOfTab - 1]);
+    setNumOfCurrentPage(1);
+    setNumOfStartBtn(1);
+  };
+
+  const handleCheckboxClick = (id: number, accepted: boolean) => {
+    const newListsOfCurrentTab = listsOfCurrentTab.map((applicant) =>
+      applicant.id === id ? { ...applicant, accepted: !applicant['accepted'] } : applicant,
+    );
+    setListsOfCurrentTab(newListsOfCurrentTab);
+    arrayOfFilteredData[numOfCurrentTab - 1] = newListsOfCurrentTab;
+    setArrayOfFilteredData(arrayOfFilteredData);
+
+    updateApplicantData(id, !accepted);
   };
 
   const getlistsOfCurrentPage = (data: Applicant[]) => {
     const indexOfLast = numOfCurrentPage * listsPerPage;
     const indexOfFirst = indexOfLast - listsPerPage;
-    const listsOfCurrentPage = data.slice(indexOfFirst, indexOfLast);
+    const listsOfCurrentPage = data?.slice(indexOfFirst, indexOfLast);
     setListsOfCurrentPage(listsOfCurrentPage);
   };
 
   useEffect(() => {
-    // const fetchData = async () => {
-    //   const data = await fetch('../../database.json');
-    //   const obj = await data.json();
-    //   const register = obj.register.map((applicant: Applicant, index: number) => {
-    //     return { ...applicant, order: index + 1 };
-    //   });
-    //   setData(register);
-    //   setNumOfPages(Math.ceil(obj.register.length / listsPerPage));
-    // };
-    // fetchData();
-    const register = dataExample.map((applicant: Applicant, index: number) => {
-      return { ...applicant, order: index + 1 };
-    });
-    setData(register);
-    setNumOfPages(Math.ceil(dataExample.length / listsPerPage));
-  }, []);
+    let round = 1;
+    let total = data;
+    let initialFilteredArray = [];
+    while (total?.length > 0) {
+      const filtered = total
+        .filter((applicant: Applicant) => applicant.round === round)
+        .map((applicant: Applicant, index: number) => {
+          return { ...applicant, order: index + 1 };
+        });
+      total = total.filter((applicant: Applicant) => applicant.round !== round);
+      initialFilteredArray.push(filtered);
+      setArrayOfFilteredData(initialFilteredArray);
+      round++;
+    }
+  }, [data]);
 
   useEffect(() => {
-    getlistsOfCurrentPage(data);
-  }, [numOfCurrentPage, data]);
+    setListsOfCurrentTab(arrayOfFilteredData[numOfCurrentTab - 1]);
+  }, [arrayOfFilteredData]);
 
-  return (
+  useEffect(() => {
+    getlistsOfCurrentPage(listsOfCurrentTab);
+    setNumOfPages(Math.ceil(listsOfCurrentTab?.length / listsPerPage));
+  }, [numOfCurrentPage, listsOfCurrentTab]);
+
+  return data?.length > 0 ? (
     <Container>
+      <Tabs>
+        {arrayOfFilteredData.map(
+          (filteredData, index) =>
+            filteredData.length > 0 && (
+              <Tab
+                key={index + 1}
+                data-key={index + 1}
+                className={numOfCurrentTab === index + 1 ? 'selected' : ''}
+                onClick={(e) => handleTabClick(Number(e.target.dataset.key))}
+              >
+                {index + 1}차 모집
+              </Tab>
+            ),
+        )}
+      </Tabs>
       <Table>
         <thead>
           <tr>
@@ -65,12 +100,11 @@ export default function ApplicantsList() {
             <th>이용수단</th>
             <th>거주지</th>
             <th>당첨여부</th>
-            <th>지원회차</th>
           </tr>
         </thead>
         <tbody>
-          {listsOfCurrentPage.map((applicant: Applicant, index: number) => (
-            <tr key={index}>
+          {listsOfCurrentPage?.map((applicant: Applicant, index: number) => (
+            <tr key={applicant.id}>
               <td>{applicant.order}</td>
               <td>{applicant.date}</td>
               <td>{applicant.name}</td>
@@ -78,16 +112,15 @@ export default function ApplicantsList() {
               <td>{applicant.birth}</td>
               <td>{applicant.contact}</td>
               <td>{applicant.email}</td>
-              <td>{applicant.transportation}</td>
+              <td>{applicant.transportation.join(', ')}</td>
               <td>{applicant.address}</td>
               <td>
                 <input
                   type="checkbox"
                   checked={applicant.accepted}
-                  onChange={() => handleCheckboxClick(applicant.id)}
+                  onChange={() => handleCheckboxClick(applicant.id, applicant.accepted)}
                 />
               </td>
-              <td>{`${applicant.round}차`}</td>
             </tr>
           ))}
         </tbody>
@@ -120,6 +153,10 @@ export default function ApplicantsList() {
         </Arrow>
       </Pagination>
     </Container>
+  ) : (
+    <Container>
+      <p>검색 결과가 없습니다.</p>
+    </Container>
   );
 }
 
@@ -136,6 +173,27 @@ const Table = styled.table`
   th,
   td {
     padding: 4px;
+  }
+`;
+
+const Tabs = styled.ul`
+  display: flex;
+  justify-content: space-around;
+`;
+
+const Tab = styled.li`
+  display: inline-block;
+  width: 100%;
+  height: 3rem;
+  text-align: center;
+  line-height: 3rem;
+  font-weight: 600;
+  background-color: ${theme.backgroundLightColor};
+  color: ${theme.fontLightColor};
+  cursor: pointer;
+  &.selected {
+    background-color: ${theme.backgroundMediumColor};
+    color: ${theme.fontDarkColor};
   }
 `;
 

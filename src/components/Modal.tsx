@@ -2,19 +2,35 @@ import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
+export const modalHeights = {
+  '100%': '100%',
+  '50%': '50%',
+} as const;
+export const modalPositions = {
+  bottom: 'bottom',
+  center: 'center',
+} as const;
+
+type ModalHeights = keyof typeof modalHeights;
+type ModalContentPosition = keyof typeof modalPositions;
+
 interface ModalProps {
   children: ReactNode;
-  height: '100%' | '50%';
+  contentPosition: ModalContentPosition;
+  height: ModalHeights;
+  goWhenClosing: string;
 }
 
-export default function Modal({ children, height = '100%' }: ModalProps) {
+export default function Modal({ children, contentPosition, height = modalHeights['100%'], goWhenClosing }: ModalProps) {
   const navigate = useNavigate();
-  const closeModal = () => navigate('', { state: '' });
+  const closeModal = () => navigate(goWhenClosing, { state: '' });
 
   return (
     <Container>
       <Background onClick={closeModal} />
-      <Contents height={height}>{children}</Contents>
+      <Contents height={height} position={contentPosition}>
+        {children}
+      </Contents>
     </Container>
   );
 }
@@ -37,10 +53,18 @@ const Background = styled.div`
   width: 100%;
   background-color: #00000077;
 `;
-const Contents = styled.div<{ height: '100%' | '50%' }>`
+const Contents = styled.div<{ height: ModalHeights; position: ModalContentPosition }>`
   position: absolute;
+  top: ${(props) => (props.position === 'center' ? '50%' : '')};
+  translate: ${(props) => (props.position === 'center' ? '0 -50%' : '')};
+  bottom: ${(props) => (props.position === 'bottom' ? 0 : '')};
   max-height: ${(props) => props.height};
   max-width: 450px;
-  background-color: white;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
   overflow-y: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: ${(props) => (props.position === 'center' ? 'center' : '')};
 `;
