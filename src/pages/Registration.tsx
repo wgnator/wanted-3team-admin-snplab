@@ -136,7 +136,7 @@ export default function Registration() {
       address: addressRef.current?.value,
       contact: contactRef.current?.value,
       email: emailRef.current?.value,
-      transportations: Object.entries(transportations)
+      transportation: Object.entries(transportations)
         .filter(([transportation, isValid]) => isValid && transportation)
         .map((transportation) => transportation[0]),
     };
@@ -171,8 +171,8 @@ export default function Registration() {
     let agreeAll = agreeAllRef.current;
     let personalInfo = personalInformationRef.current;
     let consentToProvideInfo = consentToProvideInformationRef.current;
-
     let newCheckValue = true;
+
     if (isTrue(personalInfo.checked, consentToProvideInfo.checked)) newCheckValue = false;
 
     agreeAll.checked = newCheckValue;
@@ -186,12 +186,23 @@ export default function Registration() {
     });
   };
 
+  const changeAgreeAll = (values: boolean[]) => {
+    if (!agreeAllRef.current) return;
+    if (values.filter((value) => value === true).length === values.length) {
+      agreeAllRef.current.checked = true;
+      return;
+    }
+    agreeAllRef.current.checked = false;
+  };
+
   const changePolicy = (target: RefObject<HTMLInputElement>) => {
     setInputStatus((prevState) => {
       if (!target.current) return prevState;
       const { name, checked } = target.current as { name: keyof typeof inputStatus; checked: boolean };
       prevState[name].isValid = checked;
       prevState[name].message = checked ? '' : ERROR_MESSAGES[name];
+
+      changeAgreeAll([prevState.개인정보처리방침.isValid, prevState.제3자정보제공.isValid]);
       return { ...prevState };
     });
   };
@@ -387,6 +398,7 @@ export default function Registration() {
                 label="이용약관 모두 동의"
                 ref={agreeAllRef}
                 onClickWrapper={agreeAll}
+                preventBubbling
                 hasBorder
               />
             }

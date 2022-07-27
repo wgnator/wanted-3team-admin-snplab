@@ -6,19 +6,33 @@ import CheckboxInput from './CheckboxInput';
 import ErrorMessage from './ErrorMessage';
 import Label from './Label';
 
+type EventFunction = (event: MouseEvent<HTMLDivElement>) => void;
+type VoidFunction = () => void;
+
 interface CheckboxProps {
   name: string;
   label: string;
   isValid?: boolean;
+  preventBubbling?: boolean;
   errorMessage?: string;
   hasBorder?: boolean;
-  onClickWrapper?: (event: MouseEvent<HTMLDivElement>) => void;
-  changeInput?: () => void;
-  changePage?: () => void;
+  onClickWrapper?: EventFunction;
+  changeInput?: VoidFunction;
+  changePage?: VoidFunction;
 }
 
 export default forwardRef(function Checkbox(
-  { name, label, isValid, errorMessage, hasBorder = false, onClickWrapper, changeInput, changePage }: CheckboxProps,
+  {
+    name,
+    label,
+    preventBubbling,
+    isValid,
+    errorMessage,
+    hasBorder = false,
+    onClickWrapper,
+    changeInput,
+    changePage,
+  }: CheckboxProps,
   ref,
 ) {
   return (
@@ -32,6 +46,7 @@ export default forwardRef(function Checkbox(
         ref={ref}
         onChange={changeInput}
         hasBorder={hasBorder}
+        hasMouseEvent={!preventBubbling}
       />
       <Label label={label} name={name} />
 

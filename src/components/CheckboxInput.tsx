@@ -7,13 +7,27 @@ interface CheckboxInputProps extends React.InputHTMLAttributes<HTMLInputElement>
   name: string;
   label?: string;
   hasBorder?: boolean;
+  hasMouseEvent?: boolean;
 }
 
-export default forwardRef(function CheckboxInput({ name, label, hasBorder = false, ...rest }: CheckboxInputProps, ref) {
-  return <InputElement id={label} name={name} {...rest} ref={ref as RefWithNullType} hasBorder={hasBorder} />;
+export default forwardRef(function CheckboxInput(
+  { name, label, hasBorder = false, hasMouseEvent = true, ...rest }: CheckboxInputProps,
+  ref,
+) {
+  return (
+    <InputElement
+      id={label}
+      name={name}
+      {...rest}
+      ref={ref as RefWithNullType}
+      hasBorder={hasBorder}
+      pointerEvents={hasMouseEvent}
+    />
+  );
 });
 
-const InputElement = styled.input<{ hasBorder: boolean }>`
+const InputElement = styled.input<{ hasBorder: boolean; pointerEvents: boolean }>`
+  pointer-events: ${(props) => (props.pointerEvents ? 'all' : 'none')};
   appearance: none;
   width: 1.5rem;
   height: 1.5rem;
