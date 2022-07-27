@@ -2,10 +2,15 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
+import LoadingSpinner from './LoadingSpinner';
 
-type ApplicantsListProps = { data: Applicant[]; updateApplicantData: (id: number, isAccepted: boolean) => void };
+type ApplicantsListProps = {
+  data: Applicant[];
+  isLoading: boolean;
+  updateApplicantData: (id: number, isAccepted: boolean) => void;
+};
 
-export default function ApplicantsList({ data, updateApplicantData }: ApplicantsListProps) {
+export default function ApplicantsList({ data, isLoading, updateApplicantData }: ApplicantsListProps) {
   const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
 
   //listsOfCurrentTab csv 다운로드!!
@@ -152,10 +157,12 @@ export default function ApplicantsList({ data, updateApplicantData }: Applicants
           &gt;
         </Arrow>
       </Pagination>
+      {isLoading && <LoadingSpinner />}
     </Container>
   ) : (
     <Container>
       <p>검색 결과가 없습니다.</p>
+      {isLoading && <LoadingSpinner />}
     </Container>
   );
 }
