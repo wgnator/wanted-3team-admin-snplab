@@ -11,7 +11,7 @@ export interface Applicant {
   birth: string;
   contact: string;
   email: string;
-  transportation: TransportationTypes;
+  transportation: TransportationTypes[];
   address: string;
   accepted: boolean;
   order?: number;
