@@ -11,7 +11,6 @@ export default function useRegister() {
   const [applicants,setApplicants] = React.useState<ApplicantQuery | null>(null);
   const [applyLoading,setApplyLoading] = React.useState(true);
   
-  // transportation_like=도보
   function getApplicants (query?:SearchQueryType|undefined) {
     if(query){
       registerService.get(`?${getMultiSearch(query)}`, (response:ResponseType)=>{
@@ -34,7 +33,6 @@ export default function useRegister() {
     
     
       registerService.post("",postData).then((response)=>{
-      console.log("포스트 성공",response);
       setApplyLoading(false)
       })
   }
