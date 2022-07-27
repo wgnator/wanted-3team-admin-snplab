@@ -17,13 +17,8 @@ export default function ApplyStatus() {
   };
 
   useEffect(() => {
-    console.log(query);
     getApplicants(query);
   }, [query]);
-
-  useEffect(() => {
-    console.log('지원자 데이터', applicants);
-  }, [applicants]);
 
   return (
     <Container>
