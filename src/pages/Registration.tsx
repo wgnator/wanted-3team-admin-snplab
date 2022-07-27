@@ -129,9 +129,11 @@ export default function Registration() {
     if (!hasValidation) return;
 
     const postData = {
+      round: 1,
       name: nameRef.current?.value,
       gender: maleRef.current?.checked ? maleRef.current?.value : femaleRef.current?.value,
       birth: birthRef.current?.value,
+      address: addressRef.current?.value,
       contact: contactRef.current?.value,
       email: emailRef.current?.value,
       transportations: Object.entries(transportations)

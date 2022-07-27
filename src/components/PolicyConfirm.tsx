@@ -24,6 +24,7 @@ export default function PolicyConfirm({ innerHtml }: PolicyConfirmProps) {
 }
 
 const Container = styled.div`
+  overflow-y: scroll;
   background-color: white;
   p {
     padding: 1rem 1rem 0 1rem;
