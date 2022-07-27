@@ -32,3 +32,15 @@
   - 제3자 정보제공 동의 안내
   - 입력완료
   - 지원 완료
+### 정윤서
+- Api 모듈 
+  -useCache
+    -saveInCache 함수로 전달받은 데이터를 ref에 저장하여 리렌더링시에도 변경되지 않게 저장
+    -returnCache 함수로 저장된 데이터를 리턴
+  -useAddress
+    -getAddressApi 로 대한민국의 모든 시를 받아와 cache에 저장
+    -searchAddress 로 모든 시가 들어가 있는 cache를 불러와 검색된 시의 코드를 비교하여 , 모든 구를 받아옴
+  -useRegister
+    -getApplicants 로 전달받은 매개변수가 없으면 모든 지원자를 받아오고 , 매개변수가 있다면 검색어로 지원자를 filter하여 받아옴
+    -postApplicants 함수로 처음 지원자 등록 데이터를 database.json에 저장
+    -updateApplicants 함수로 합격여부 변경시 accepted변수 변경
