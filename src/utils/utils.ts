@@ -16,3 +16,7 @@ export const convertToDottedFormat = (data: SelectedDate) => {
   if (data.day) day = data.day.length < 2 ? '0' + data.day : data.day;
   return `${data.year}.${month && month + '.'}${day}`;
 };
+
+export const phoneFormat = (phone: string) => {
+  return phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/, '$1-$2-$3');
+};

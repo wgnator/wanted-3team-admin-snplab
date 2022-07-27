@@ -1,4 +1,5 @@
 import { Applicant } from '../interfaces/types';
+import { phoneFormat } from './utils';
 
 interface DownloadFile {
   data: string;
@@ -28,15 +29,20 @@ export const exportToCsv = (applicants: Applicant[], fileName: string = 'downloa
     alert('다운로드할 데이터가 없습니다!');
   }
   //속도
-  const headers = ['round, date, name, birth, contact, email, transportation, address, accepted'];
+  const headers = ['round, date, name, birth, contact, email,gender, transportation, address, accepted'];
 
   // 범용성
   // const headers = [String(Object.keys(data[0]))];
 
   const contents = applicants.reduce((acc: string[], content: Applicant) => {
     // 속도
-    const { round, date, name, birth, contact, email, transportation, address, accepted } = content;
-    acc.push([round, date, name, birth, contact, email, transportation, address, accepted].join(','));
+    const { round, date, name, birth, contact, email, gender, transportation, address, accepted } = content;
+    // console.log(content);
+    acc.push(
+      [round, date, name, birth, phoneFormat(contact), email, gender, transportation.join('/'), address, accepted].join(
+        ',',
+      ),
+    );
 
     // 범용성
     // acc.push(Object.values(content).join(','));
@@ -44,6 +50,8 @@ export const exportToCsv = (applicants: Applicant[], fileName: string = 'downloa
   }, []);
 
   const convertedData = [...headers, ...contents].join('\n');
+
+  console.log(convertedData);
 
   downloadFile({
     data: convertedData,
