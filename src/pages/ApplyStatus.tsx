@@ -77,6 +77,7 @@ const RightSection = styled.section`
   padding: 0 1.5rem;
   width: 85%;
   height: 100%;
+  overflow: auto;
   > * {
     margin: 2rem 0;
   }
