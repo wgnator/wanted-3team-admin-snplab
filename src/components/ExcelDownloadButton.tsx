@@ -16,6 +16,7 @@ const Button = styled.button`
   height: 2rem;
   font-size: 0.8rem;
   border: none;
-  position: relative;
+  position: absolute;
   right: 0;
+  top: -4rem;
 `;

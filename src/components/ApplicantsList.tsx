@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
+import ExcelDownloadButton from './ExcelDownloadButton';
 import LoadingSpinner from './LoadingSpinner';
 
 type ApplicantsListProps = {
@@ -75,95 +76,103 @@ export default function ApplicantsList({ data, isLoading, updateApplicantData }:
     setNumOfPages(Math.ceil(listsOfCurrentTab?.length / listsPerPage));
   }, [numOfCurrentPage, listsOfCurrentTab]);
 
-  return data?.length > 0 ? (
-    <Container>
-      <Tabs>
-        {arrayOfFilteredData.map(
-          (filteredData, index) =>
-            filteredData.length > 0 && (
-              <Tab
-                key={index + 1}
-                data-key={index + 1}
-                className={numOfCurrentTab === index + 1 ? 'selected' : ''}
-                onClick={(e) => handleTabClick(Number(e.target.dataset.key))}
-              >
-                {index + 1}차 모집
-              </Tab>
-            ),
-        )}
-      </Tabs>
-      <Table>
-        <thead>
-          <tr>
-            <th>Num.</th>
-            <th>지원날짜</th>
-            <th>지원자명</th>
-            <th>성별</th>
-            <th>생년월일</th>
-            <th>연락처</th>
-            <th>이메일</th>
-            <th>이용수단</th>
-            <th>거주지</th>
-            <th>당첨여부</th>
-          </tr>
-        </thead>
-        <tbody>
-          {listsOfCurrentPage?.map((applicant: Applicant, index: number) => (
-            <tr key={applicant.id}>
-              <td>{applicant.order}</td>
-              <td>{applicant.date}</td>
-              <td>{applicant.name}</td>
-              <td>{applicant.gender}</td>
-              <td>{applicant.birth}</td>
-              <td>{applicant.contact}</td>
-              <td>{applicant.email}</td>
-              <td>{applicant.transportation.join(', ')}</td>
-              <td>{applicant.address}</td>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={applicant.accepted}
-                  onChange={() => handleCheckboxClick(applicant.id, applicant.accepted)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      <Pagination>
-        <Arrow onClick={() => setNumOfStartBtn((prev) => prev - 5)} disabled={numOfStartBtn > 1 ? false : true}>
-          &lt;
-        </Arrow>
-        <ol>
-          {new Array(5).fill('').map((_, index) => (
-            <li key={numOfStartBtn + index}>
-              {numOfStartBtn + index <= numOfPages && (
-                <Button
-                  onClick={(e) => {
-                    setNumOfCurrentPage(Number(e.target.textContent));
-                  }}
-                  color={numOfCurrentPage === numOfStartBtn + index ? theme.borderOnFocusColor : theme.borderDarkColor}
-                >
-                  {numOfStartBtn + index}
-                </Button>
-              )}
-            </li>
-          ))}
-        </ol>
-        <Arrow
-          onClick={() => setNumOfStartBtn((prev) => prev + 5)}
-          disabled={numOfStartBtn + 4 >= numOfPages ? true : false}
-        >
-          &gt;
-        </Arrow>
-      </Pagination>
-      {isLoading && <LoadingSpinner />}
-    </Container>
-  ) : (
-    <Container>
-      <p>검색 결과가 없습니다.</p>
-      {isLoading && <LoadingSpinner />}
-    </Container>
+  return (
+    <>
+      {data?.length > 0 ? (
+        <Container>
+          <ExcelDownloadButton data={listsOfCurrentTab} />
+          <Tabs>
+            {arrayOfFilteredData.map(
+              (filteredData, index) =>
+                filteredData.length > 0 && (
+                  <Tab
+                    key={index + 1}
+                    data-key={index + 1}
+                    className={numOfCurrentTab === index + 1 ? 'selected' : ''}
+                    onClick={(e) => handleTabClick(Number(e.target.dataset.key))}
+                  >
+                    {index + 1}차 모집
+                  </Tab>
+                ),
+            )}
+          </Tabs>
+          <Table>
+            <thead>
+              <tr>
+                <th>Num.</th>
+                <th>지원날짜</th>
+                <th>지원자명</th>
+                <th>성별</th>
+                <th>생년월일</th>
+                <th>연락처</th>
+                <th>이메일</th>
+                <th>이용수단</th>
+                <th>거주지</th>
+                <th>당첨여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              {listsOfCurrentPage?.map((applicant: Applicant, index: number) => (
+                <tr key={applicant.id}>
+                  <td>{applicant.order}</td>
+                  <td>{applicant.date}</td>
+                  <td>{applicant.name}</td>
+                  <td>{applicant.gender}</td>
+                  <td>{applicant.birth}</td>
+                  <td>{applicant.contact}</td>
+                  <td>{applicant.email}</td>
+                  <td>{applicant.transportation.join(', ')}</td>
+                  <td>{applicant.address}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={applicant.accepted}
+                      onChange={() => handleCheckboxClick(applicant.id, applicant.accepted)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          <Pagination>
+            <Arrow onClick={() => setNumOfStartBtn((prev) => prev - 5)} disabled={numOfStartBtn > 1 ? false : true}>
+              &lt;
+            </Arrow>
+            <ol>
+              {new Array(5).fill('').map((_, index) => (
+                <li key={numOfStartBtn + index}>
+                  {numOfStartBtn + index <= numOfPages && (
+                    <Button
+                      onClick={(e) => {
+                        setNumOfCurrentPage(Number(e.target.textContent));
+                      }}
+                      color={
+                        numOfCurrentPage === numOfStartBtn + index ? theme.borderOnFocusColor : theme.borderDarkColor
+                      }
+                    >
+                      {numOfStartBtn + index}
+                    </Button>
+                  )}
+                </li>
+              ))}
+            </ol>
+            <Arrow
+              onClick={() => setNumOfStartBtn((prev) => prev + 5)}
+              disabled={numOfStartBtn + 4 >= numOfPages ? true : false}
+            >
+              &gt;
+            </Arrow>
+          </Pagination>
+          {isLoading && <LoadingSpinner />}
+        </Container>
+      ) : (
+        <Container>
+          <ExcelDownloadButton data={listsOfCurrentTab} />
+          <p>검색 결과가 없습니다.</p>
+          {isLoading && <LoadingSpinner />}
+        </Container>
+      )}
+    </>
   );
 }
 
@@ -171,6 +180,7 @@ const Container = styled.div`
   width: 95%;
   padding-bottom: 16px;
   background-color: ${theme.backgroundMediumColor};
+  position: relative;
 `;
 
 const Table = styled.table`
