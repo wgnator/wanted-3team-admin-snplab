@@ -1,13 +1,12 @@
-import PersonalInformationPolicy from '../assets/privacy_policy';
 import { modalHeights, modalPositions } from '../components/Modal';
-import PolicyConfirm from '../components/PolicyConfirm';
 
 // RegExp
 const REGEX_KOREAN = /^[가-힣]*$/; // 분리된 자음, 모음은 불가. 완성된 글자만 가능
-const REGEX_NUMBER_OF_8_DIGIT = /^\d{8}$/;
+const REGEX_NUMBER_OF_8_DIGIT = /^\d{4}\.\d{2}\.\d{2}$/;
+// const REGEX_NUMBER_OF_8_DIGIT = /^\d{8}$/;
 const REGEX_BIRTHDAY = REGEX_NUMBER_OF_8_DIGIT;
-const REGEX_NUMBER_OF_11_DIGIT = /^\d{11}$/;
-const REGEX_CONTACT = REGEX_NUMBER_OF_11_DIGIT;
+const REGEX_NUMBER_OF_11_DIGIT_WITH_DOT = /^\d{11}$/;
+const REGEX_CONTACT = REGEX_NUMBER_OF_11_DIGIT_WITH_DOT;
 // @ 필수 포함, .com으로 끝나기
 const REGEX_EMAIL =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+com))$/;
@@ -28,8 +27,8 @@ export const ERROR_MESSAGES = {
   연락처: '11자리 숫자만 입력해주세요',
   이메일: '.com 주소만 가능합니다',
   주교통수단: '주요 교통수단을 선택해주세요',
-  개인정보처리방침: '필수항목입니다1',
-  제3자정보제공: '필수항목입니다2',
+  개인정보처리방침: '필수항목입니다',
+  제3자정보제공: '필수항목입니다',
 };
 
 export const MODAL_PATHS = {
@@ -283,3 +282,8 @@ export const REGION = {
     '화순군',
   ],
 } as const;
+
+export const keyCodes = {
+  backspace: 'Backspace',
+  space: 'Space',
+};

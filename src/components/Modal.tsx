@@ -59,7 +59,7 @@ const Contents = styled.div<{ height: ModalHeights; position: ModalContentPositi
   translate: ${(props) => (props.position === 'center' ? '0 -50%' : '')};
   bottom: ${(props) => (props.position === 'bottom' ? 0 : '')};
   max-height: ${(props) => props.height};
-  max-width: 450px;
+  max-width: 400px;
   width: 100%;
   height: 100%;
   background-color: transparent;

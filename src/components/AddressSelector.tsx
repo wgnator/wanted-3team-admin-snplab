@@ -3,21 +3,31 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { REGION } from '../constants/constants';
 import { theme } from '../styles/theme';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { CloseButton as CCloseButton, Navigation as NNavigation } from './PolicyConfirm';
 import { RefObject } from 'react';
+import useAddress from '../hooks/useAddress';
 
-type City = keyof typeof REGION;
-type Country = typeof REGION[City][number];
+type Si = keyof typeof REGION;
+type Gu = typeof REGION[Si][number];
 
 interface AddressSelectorProps {
   validInput: (ref?: RefObject<HTMLInputElement>) => void;
 }
 
 export default forwardRef<HTMLInputElement, AddressSelectorProps>(function AddressSelector({ validInput }, ref) {
-  const [adress, setAddress] = useState<[City, Country]>(['서울특별시', '강남구']);
+  const { getAddressApi, siAddress, searchAddress, guAddress } = useAddress();
 
-  const cities = Object.keys(REGION);
+  // @ts-ignore
+  console.log('siAddress.regcodes', siAddress?.regcodes, 'guAddress.regcodes', guAddress?.regcodes);
+
+  const [selectedSi, setSelectedSi] = useState<Si | null>(null);
+  const [selectedGu, setSelectedGu] = useState<Gu | null>(null);
+
+  // @ts-ignore
+  const cities: Si[] = siAddress?.regcodes.map((regcode) => regcode.name) || [];
+  // @ts-ignore
+  const guList: Gu[] = guAddress?.regcodes.slice(1).map((regcode) => regcode.name?.split(' ')[1]) || [];
 
   const navigate = useNavigate();
   const closeModal = () => navigate('', { state: null });
@@ -25,19 +35,32 @@ export default forwardRef<HTMLInputElement, AddressSelectorProps>(function Addre
   const submitAdress = () => {
     if (ref === null) return;
     // @ts-ignore
-    ref.current.value = adress.join(' ');
+    ref.current.value = `${selectedSi || ''} ${selectedGu || ''}`;
     validInput();
     navigate('', { state: '' });
   };
 
-  const selectCity = (city: City) => {
-    if (adress[0] === city) return;
-    setAddress(([_, prevCountry]) => [city, prevCountry]);
+  const selectCity = (city: Si) => {
+    if (selectedSi === city) return;
+    setSelectedSi(city);
   };
-  const selectCountry = (country: Country) => {
-    if (adress[1] === country) return;
-    setAddress(([prevCity, _]) => [prevCity, country]);
+
+  const selectCountry = (country: Gu) => {
+    if (selectedGu === country) return;
+    setSelectedGu(country);
   };
+
+  useEffect(() => {
+    getAddressApi();
+  }, []);
+
+  // useEffect(() => {
+  //   if (!selectedSi) setSelectedSi('서울');
+  // }, [siAddress]);
+
+  useEffect(() => {
+    if (selectedSi) searchAddress(selectedSi);
+  }, [selectedSi]);
 
   return (
     <Container>
@@ -54,28 +77,30 @@ export default forwardRef<HTMLInputElement, AddressSelectorProps>(function Addre
         </TitleMain>
         <CitiesAndCounties>
           <Cities>
-            {cities.map((city, idx) => (
-              <SelectButton
-                key={idx}
-                hasSelect={city === adress[0]}
-                type="button"
-                onClick={() => selectCity(city as City)}
-              >
-                {city}
+            {cities.map((si, idx) => (
+              <SelectButton key={idx} hasSelect={si === selectedSi} type="button" onClick={() => selectCity(si as Si)}>
+                {si}
               </SelectButton>
             ))}
           </Cities>
           <Counties>
-            {REGION[adress[0]].map((country, idx) => (
-              <SelectButton
-                key={idx}
-                hasSelect={country === adress[1]}
-                type="button"
-                onClick={() => selectCountry(country as Country)}
-              >
-                {country}
-              </SelectButton>
-            ))}
+            {guList.length === 0 ? (
+              <P>시/도를 선택하세요</P>
+            ) : (
+              guList.map(
+                (gu, idx) =>
+                  gu !== selectedSi && (
+                    <SelectButton
+                      key={idx}
+                      hasSelect={gu === selectedGu}
+                      type="button"
+                      onClick={() => selectCountry(gu as Gu)}
+                    >
+                      {gu}
+                    </SelectButton>
+                  ),
+              )
+            )}
           </Counties>
         </CitiesAndCounties>
         <Button onClick={submitAdress}>확인</Button>
@@ -126,6 +151,7 @@ const CitiesAndCounties = styled.div`
   font-size: 1.2rem;
   overflow: hidden;
   gap: 0.5rem;
+  height: 100%;
 `;
 const Cities = styled.div`
   display: flex;
@@ -151,13 +177,12 @@ const Button = styled.button`
 `;
 
 const SelectButton = styled(Button)<{ hasSelect: boolean }>`
-  cursor: pointer;
-  border: none;
   background-color: ${(props) => (props.hasSelect ? theme.buttonLightColor : 'transparent')};
   color: ${(props) => (props.hasSelect ? theme.fontDarkColor : theme.fontLightColor)};
-  width: 100%;
-  border-radius: 1rem;
-  padding: 1rem 0;
-  font-size: 1rem;
   border-radius: 0.5rem;
+`;
+
+const P = styled.p`
+  font-size: 1rem;
+  padding: 1rem 0;
 `;
