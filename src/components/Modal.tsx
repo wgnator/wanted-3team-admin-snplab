@@ -63,7 +63,6 @@ const Contents = styled.div<{ height: ModalHeights; position: ModalContentPositi
   width: 100%;
   height: 100%;
   background-color: transparent;
-  overflow-y: scroll;
   display: flex;
   justify-content: center;
   align-items: ${(props) => (props.position === 'center' ? 'center' : '')};
