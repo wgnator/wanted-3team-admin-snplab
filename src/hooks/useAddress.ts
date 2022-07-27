@@ -2,7 +2,7 @@ import React from "react";
 import { addressService } from "../api/axiosInstance";
 import { AddressSi, ResponseType } from "../interfaces/types";
 import { getMatchCity } from "../service/procAddress";
-import { useCache } from "./useCashe";
+import { useCache } from "./useCache";
 
 const regCode = 'regcodes?regcode_pattern'
 
@@ -16,7 +16,7 @@ export default function useAddress(){
     return set(response)
   }
 
-  function getAddressApi(city?:string) {
+  function getAddressApi() {
     addressService.get(`${regCode}=*00000000`,(response:ResponseType) => {
       setAddresData(setSiAddress,response.data)
       saveInCache("address",response.data)

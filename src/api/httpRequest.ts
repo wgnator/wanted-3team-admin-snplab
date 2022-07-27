@@ -1,4 +1,3 @@
-import { ResponseType } from './../interfaces/types';
 import { AxiosInstance } from 'axios';
 
 export class HttpRequest<T> {
@@ -7,7 +6,6 @@ export class HttpRequest<T> {
   }
   async get(url:string, callback:any) {
     await this.service.get(url).then((_response:any) => {
-      console.log("HttpRequest.get",url,_response);
       if (callback) callback(_response);
       if (url === undefined) this.error(_response.data)
       return _response;
