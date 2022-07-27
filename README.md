@@ -44,3 +44,6 @@
     - getApplicants 로 전달받은 매개변수가 없으면 모든 지원자를 받아오고 , 매개변수가 있다면 검색어로 지원자를 filter하여 받아옴
     - postApplicants 함수로 처음 지원자 등록 데이터를 database.json에 저장
     - updateApplicants 함수로 합격여부 변경시 accepted변수 변경
+### 김영호
+- CSV 다운로드 구현
+- phoneFormat 구현
