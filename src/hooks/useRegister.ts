@@ -30,11 +30,10 @@ export default function useRegister() {
         ...application,
         date:format(new Date() , "yyyy.MM.dd")
       }
-    
-    
-      registerService.post("",postData).then((response)=>{
+
+    registerService.post("",postData).then(()=>{
       setApplyLoading(false)
-      })
+    })
   }
 
   function updateApplicants (id:number,accepted:boolean) {

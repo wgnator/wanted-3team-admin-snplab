@@ -1,4 +1,3 @@
-import { ResponseType } from './../interfaces/types';
 import { AxiosInstance } from 'axios';
 
 export class HttpRequest<T> {

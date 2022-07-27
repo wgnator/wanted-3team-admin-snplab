@@ -3350,7 +3350,7 @@
         "전동킥보드"
       ],
       "address": "대전 서구",
-      "accepted": false
+      "accepted": true
     },
     {
       "round": 1,
@@ -3647,7 +3647,8 @@
       "contact": "01098765482",
       "email": "zxcv48@naver.com",
       "transportation": [
-        "지하철"
+        "지하철",
+        "도보"
       ],
       "address": "대전 유성구",
       "accepted": true
@@ -3719,13 +3720,32 @@
       "birth": "1998.01.10",
       "contact": "01012345678",
       "email": "gildongkim@naver.com",
-      "transportations": [
+      "address": "서울특별시 중구",
+      "transportation": [
         "버스",
         "지하철",
         "택시"
       ],
       "date": "2022.07.27",
-      "id": 248
+      "id": 248,
+      "accepted": false
+    },
+    {
+      "round": 1,
+      "name": "김길동",
+      "gender": "여자",
+      "birth": "1987.02.24",
+      "address": "서울특별시 중구",
+      "contact": "01012347789",
+      "email": "gildongship@ship.com",
+      "transportation": [
+        "버스",
+        "택시",
+        "자전거"
+      ],
+      "date": "2022.07.27",
+      "id": 249,
+      "accepted": false
     }
   ]
 }
