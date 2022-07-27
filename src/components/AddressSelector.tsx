@@ -1,15 +1,11 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { REGION } from '../constants/constants';
 import { theme } from '../styles/theme';
 import { forwardRef, useEffect, useState } from 'react';
 import { CloseButton as CCloseButton, Navigation as NNavigation } from './PolicyConfirm';
 import { RefObject } from 'react';
 import useAddress from '../hooks/useAddress';
-
-type Si = keyof typeof REGION;
-type Gu = typeof REGION[Si][number];
 
 interface AddressSelectorProps {
   validInput: (ref?: RefObject<HTMLInputElement>) => void;
@@ -21,13 +17,13 @@ export default forwardRef<HTMLInputElement, AddressSelectorProps>(function Addre
   // @ts-ignore
   console.log('siAddress.regcodes', siAddress?.regcodes, 'guAddress.regcodes', guAddress?.regcodes);
 
-  const [selectedSi, setSelectedSi] = useState<Si | null>(null);
-  const [selectedGu, setSelectedGu] = useState<Gu | null>(null);
+  const [selectedSi, setSelectedSi] = useState<string | null>(null);
+  const [selectedGu, setSelectedGu] = useState<string | null>(null);
 
   // @ts-ignore
-  const cities: Si[] = siAddress?.regcodes.map((regcode) => regcode.name) || [];
+  const cities: string[] = siAddress?.regcodes.map((regcode) => regcode.name) || [];
   // @ts-ignore
-  const guList: Gu[] = guAddress?.regcodes.slice(1).map((regcode) => regcode.name?.split(' ')[1]) || [];
+  const guList: string[] = guAddress?.regcodes.slice(1).map((regcode) => regcode.name?.split(' ')[1]) || [];
 
   const navigate = useNavigate();
   const closeModal = () => navigate('', { state: null });
@@ -40,12 +36,12 @@ export default forwardRef<HTMLInputElement, AddressSelectorProps>(function Addre
     navigate('', { state: '' });
   };
 
-  const selectCity = (city: Si) => {
+  const selectCity = (city: string) => {
     if (selectedSi === city) return;
     setSelectedSi(city);
   };
 
-  const selectCountry = (country: Gu) => {
+  const selectCountry = (country: string) => {
     if (selectedGu === country) return;
     setSelectedGu(country);
   };
@@ -78,7 +74,7 @@ export default forwardRef<HTMLInputElement, AddressSelectorProps>(function Addre
         <CitiesAndCounties>
           <Cities>
             {cities.map((si, idx) => (
-              <SelectButton key={idx} hasSelect={si === selectedSi} type="button" onClick={() => selectCity(si as Si)}>
+              <SelectButton key={idx} hasSelect={si === selectedSi} type="button" onClick={() => selectCity(si)}>
                 {si}
               </SelectButton>
             ))}
@@ -94,7 +90,7 @@ export default forwardRef<HTMLInputElement, AddressSelectorProps>(function Addre
                       key={idx}
                       hasSelect={gu === selectedGu}
                       type="button"
-                      onClick={() => selectCountry(gu as Gu)}
+                      onClick={() => selectCountry(gu)}
                     >
                       {gu}
                     </SelectButton>

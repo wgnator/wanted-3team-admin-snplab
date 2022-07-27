@@ -124,7 +124,6 @@ export default function Registration() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('hasValidation', hasValidation);
 
     if (!hasValidation) return;
 
@@ -143,8 +142,6 @@ export default function Registration() {
 
     // @ts-ignore
     postApplicants(postData);
-
-    console.log('폼 최종', postData);
     alertDoneApply();
   };
 
@@ -430,14 +427,12 @@ export default function Registration() {
         </Form>
       </Wrapper>
       {state?.modal && (
-        <>
-          <Modal
-            height={MODAL_OPTIONS[state.modal].height}
-            contentPosition={MODAL_OPTIONS[state.modal].position}
-            goWhenClosing={MODAL_OPTIONS[state.modal].goWhenClosing}
-            children={selectModalComponent(state.modal)}
-          />
-        </>
+        <Modal
+          height={MODAL_OPTIONS[state.modal].height}
+          contentPosition={MODAL_OPTIONS[state.modal].position}
+          goWhenClosing={MODAL_OPTIONS[state.modal].goWhenClosing}
+          children={selectModalComponent(state.modal)}
+        />
       )}
     </Container>
   );
