@@ -17,7 +17,7 @@ export class HttpRequest<T> {
     })
   }
   post(url:string, data:any) {
-    this.service.post(url, data)
+    return this.service.post(url, data)
   }
   patch(url:string, data:any) {
     this.service.patch(url, data);

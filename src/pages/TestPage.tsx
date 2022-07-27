@@ -3,21 +3,19 @@ import { useEffect } from "react";
 import { errorService } from "../api/axiosInstance";
 import useAddress from "../hooks/useAddress"
 import useRegister from "../hooks/useRegister";
+import { format } from "date-fns";
 
 export default function TestPage() {
   const {siAddress,guAddress,searchAddress,getAddressApi} = useAddress()
   const {postApplicants,applicants,getApplicants,updateApplicants} = useRegister();
   const userData = {
       "round": 1,
-      "id": 7,
-      "date": "2022-05-11",
-      "name": "김석",
-      "birth": "1981.12.25",
-      "contact": "010-7897-8531",
-      "email": "baljang@gmail.com",
-      "transportation": "버스",
+      "name": "김재석",
+      "birth": "1968.07.27",
+      "contact": "010-1512-1116",
+      "email": "sukim@naver.com",
+      "transportation": ["자가용"],
       "address": "대전광역시",
-      "accepted" : true
   }
   const putData = {
       "round": 1,
@@ -37,13 +35,11 @@ export default function TestPage() {
   }
   useEffect(()=>{
     getAddressApi();
+
   },[])
-  
-  useEffect(()=>{
-    console.log("시 테스트",siAddress);
+  console.log("시 테스트",siAddress);
     console.log("구 테스트",guAddress);
-    
-  },[siAddress,guAddress])
+
   function clickError () {
     errorService.get("http://abcedeafjqps1038q:2910", (response:responseType)=>{
       console.log("에러쓰",response);
@@ -58,20 +54,24 @@ export default function TestPage() {
   },[applicants])
   // console.log("서치 테스트",searchData);
   const seaData = {
-    category:"transportations",
-    searchString:"전동킥보드"
+    category:"birth",
+    searchString:"2022.01."
   }
   function searchApply(){
     getApplicants(seaData)
   }
-  
+  function getDate(){
+    const yyyy = format(new Date() , "yyyy-MM-dd")
+    console.log(yyyy);
+    
+  }
   return (
     <div>
-      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대전</button>
-      <button onClick={(e)=> searchAddress(e.target?.innerText)}>서울</button>
-      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대구</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대전광역시</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>서울특별시</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대구광역시</button>
       <button onClick={(e)=> searchAddress(e.target?.innerText)}>대파</button>
-      
+      <button onClick={getDate}>오늘의 날짜</button>
       <button onClick={()=>getApplicants()}>지원자 받기</button>
       <button onClick={()=>searchApply()}>지원자 서치</button>
       <button onClick={postCheck}>포스트 보내기</button>

@@ -1,4 +1,3 @@
-import { Applicant } from './types';
 export type TransportationTypes = '자가용' | '버스' | '지하철' | '택시' | '자전거' | 'KTX/기차' | '전동킥보드' | '도보';
 
 export type Gender = '남' | '여';
@@ -19,7 +18,7 @@ export interface Applicant {
 }
 export interface ResponseType {
   config: object;
-  data: object | ApplicantQuery;
+  data: any;
   headers: object;
   request: object;
   status: number;
@@ -35,7 +34,7 @@ export enum SearchCategory {
 }
 export interface SearchQueryType {
   category: string;
-  searchString: string;
+  searchString: string|string[];
 }
 type regcode = 'code:string' & 'name:stirng';
 export interface AddressSi {
@@ -51,8 +50,5 @@ export interface AddressObj {
   getAddressSi: () => {};
   getAddressGu: any;
 }
-export type ApplicantQuery = 'all:Applicant' & 'search:Applicant';
-// export interface ApplicantQuery {
-//   all:Applicant | undefined
-//   search:Applicant | undefined,
-// }
+export type ApplicantQuery = 'all:Applicant' & 'search:Applicant'
+

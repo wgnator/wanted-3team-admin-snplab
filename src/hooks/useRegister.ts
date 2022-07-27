@@ -3,13 +3,17 @@ import { ResponseType, SearchQueryType,ApplicantQuery } from './../interfaces/ty
 import React from 'react';
 import { registerService } from "../api/axiosInstance";
 import { Applicant } from '../interfaces/types';
+import { format } from "date-fns";
+import { getMultiSearch } from '../service/procRegister';
+
 export default function useRegister() {
+
   const [applicants,setApplicants] = React.useState<ApplicantQuery | null>(null);
   const [applyLoading,setApplyLoading] = React.useState(true);
-
-  function getApplicants (query?:SearchQueryType) {
+  
+  function getApplicants (query?:SearchQueryType|undefined) {
     if(query){
-      registerService.get(`?${query.category}_like=${query.searchString}`, (response:ResponseType)=>{
+      registerService.get(`?${getMultiSearch(query)}`, (response:ResponseType)=>{
       setApplicants(response.data)
       setApplyLoading(false)
     })
@@ -22,17 +26,17 @@ export default function useRegister() {
   }
 
   function postApplicants (application:Applicant){
-      registerService.get(`?id=${application.id}`,(response:ResponseType)=>{  
-      console.log(typeof response.data);
-      if(response.data.length){
-        console.log("겹치는 id가 있습니다");
-        setApplyLoading(true)
-      }else{
-        registerService.post("",application)
-        setApplyLoading(false)
+    const postData = {
+        ...application,
+        date:format(new Date() , "yyyy.MM.dd")
       }
-    })
+    
+    
+      registerService.post("",postData).then((response)=>{
+      setApplyLoading(false)
+      })
   }
+
   function updateApplicants (id:number,accepted:boolean) {
     registerService.patch(`${id}`,{
       accepted:accepted

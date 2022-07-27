@@ -16,7 +16,7 @@ export default function useAddress(){
     return set(response)
   }
 
-  function getAddressApi() {
+  function getAddressApi(city?:string) {
     addressService.get(`${regCode}=*00000000`,(response:ResponseType) => {
       setAddresData(setSiAddress,response.data)
       saveInCache("address",response.data)
@@ -26,15 +26,11 @@ export default function useAddress(){
 
   function searchAddress (city:string) {
     const reg = returnCache("address")
-    setTimeout(()=>{
-      const cityType:AddressSi = getMatchCity(reg,city)
-      if(cityType === undefined) return addressService.addressError(`'${city}' is not found city`)
-      addressService.get(`${regCode}=${cityType?.code?.substring(0, 2)}*000000`,(response:ResponseType) => {
-        console.log(response);
-        
-      setAddresData(setGuAddres,response.data)
-      });
-    },100)
+    const cityType:AddressSi = getMatchCity(reg,city)
+    if(cityType === undefined) return addressService.addressError(`'${city}' is not found city`)
+    addressService.get(`${regCode}=${cityType?.code?.substring(0, 2)}*000000`,(response:ResponseType) => {
+    setAddresData(setGuAddres,response.data)
+    });
   }
     
   return {siAddress,guAddress,getAddressApi,searchAddress,isLoading: addressLoading}

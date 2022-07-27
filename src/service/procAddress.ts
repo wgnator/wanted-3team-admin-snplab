@@ -1,4 +1,4 @@
-import { AddressSi, responseType } from "../interfaces/types"
+import { AddressSi } from "../interfaces/types"
 
 
 export function getMatchCity(addressData:any,searchName:string) {
