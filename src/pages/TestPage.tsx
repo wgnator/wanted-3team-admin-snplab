@@ -35,13 +35,11 @@ export default function TestPage() {
   }
   useEffect(()=>{
     getAddressApi();
+
   },[])
-  
-  useEffect(()=>{
-    console.log("시 테스트",siAddress);
+  console.log("시 테스트",siAddress);
     console.log("구 테스트",guAddress);
-    
-  },[siAddress,guAddress])
+
   function clickError () {
     errorService.get("http://abcedeafjqps1038q:2910", (response:responseType)=>{
       console.log("에러쓰",response);
@@ -69,9 +67,9 @@ export default function TestPage() {
   }
   return (
     <div>
-      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대전</button>
-      <button onClick={(e)=> searchAddress(e.target?.innerText)}>서울</button>
-      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대구</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대전광역시</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>서울특별시</button>
+      <button onClick={(e)=> searchAddress(e.target?.innerText)}>대구광역시</button>
       <button onClick={(e)=> searchAddress(e.target?.innerText)}>대파</button>
       <button onClick={getDate}>오늘의 날짜</button>
       <button onClick={()=>getApplicants()}>지원자 받기</button>

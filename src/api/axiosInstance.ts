@@ -16,14 +16,7 @@ export const axiosRegister = axios.create({
     'Content-type': 'application/json',
   },
 });
-export const axiosError = axios.create({
-  baseURL: Register_URL,
-  headers: {
-    'Content-type': 'application/json',
-  },
-});
 
-export const errorService = new HttpRequest(axiosError);
 export const addressService = new HttpRequest(axiosAddress);
 export const registerService = new HttpRequest(axiosRegister)
 
