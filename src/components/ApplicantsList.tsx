@@ -4,6 +4,7 @@ import { Applicant } from '../interfaces/types';
 import { theme } from '../styles/theme';
 import ExcelDownloadButton from './ExcelDownloadButton';
 import LoadingSpinner from './LoadingSpinner';
+import { phoneFormat } from '../utils/utils';
 
 type ApplicantsListProps = {
   data: Applicant[];
@@ -14,7 +15,6 @@ type ApplicantsListProps = {
 export default function ApplicantsList({ data, isLoading, updateApplicantData }: ApplicantsListProps) {
   const [arrayOfFilteredData, setArrayOfFilteredData] = useState<Applicant[][]>([]);
 
-  //listsOfCurrentTab csv 다운로드!!
   const [listsOfCurrentTab, setListsOfCurrentTab] = useState<Applicant[]>([]);
   const [numOfCurrentTab, setNumOfCurrentTab] = useState<number>(1);
 
@@ -119,7 +119,7 @@ export default function ApplicantsList({ data, isLoading, updateApplicantData }:
                   <td>{applicant.name}</td>
                   <td>{applicant.gender}</td>
                   <td>{applicant.birth}</td>
-                  <td>{applicant.contact}</td>
+                  <td>{phoneFormat(applicant.contact)}</td>
                   <td>{applicant.email}</td>
                   <td>{applicant.transportation.join(', ')}</td>
                   <td>{applicant.address}</td>
