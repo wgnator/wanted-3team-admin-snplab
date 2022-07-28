@@ -36,23 +36,7 @@ export default function SearchBar({ setQuery }: SearchBarProps) {
       return inputValue.filter((state) => state.checked === true).map((checkboxState) => checkboxState.value);
     if (fieldToSearch === 'address') return inputValue;
   };
-  // const initializeValue = (fieldToSearch) => {
-  //   if (fieldToSearch === 'name') return '';
-  //   if (fieldToSearch === 'date') return {
-  //     year: '2022',
-  //     month: '',
-  //     day: '',
-  //   };
-  //   if (fieldToSearch === 'gender') return '';
-  //   if (fieldToSearch === 'birth') return {
-  //     year: '2022',
-  //     month: '',
-  //     day: '',
-  //   };
-  //   if (fieldToSearch === 'transportation') return
-  //     return inputValue.filter((state) => state.checked === true).map((checkboxState) => checkboxState.value);
-  //   if (fieldToSearch === 'address') return inputValue;
-  // }
+
   const alertUser = () => {
     window.alert('입력이 잘못됐습니다.');
   };
