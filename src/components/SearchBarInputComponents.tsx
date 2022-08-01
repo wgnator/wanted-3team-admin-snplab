@@ -20,13 +20,6 @@ export const TextInput = ({ placeholder, setValue, value }: CommonPropsTypeForIn
 };
 
 export const DateInput = ({ yearsRange, setValue, value }: CommonPropsTypeForInput & { yearsRange: number[] }) => {
-  // useEffect(() => {
-  //   setValue({
-  //     year: yearsRange[yearsRange.length - 1].toString(),
-  //     month: '',
-  //     day: '',
-  //   });
-  // }, []);
 
   useEffect(() => {
     value === '' &&
@@ -36,6 +29,7 @@ export const DateInput = ({ yearsRange, setValue, value }: CommonPropsTypeForInp
         day: '',
       });
   }, [value]);
+  
   const [daysOfSelectedMonth, setDaysOfSelectedMonth] = useState<number[] | null>();
 
   const handleOnChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -117,6 +111,7 @@ type CheckboxValueType = {
   value: string;
   checked: boolean;
 };
+
 export const CheckboxInput = ({
   fieldSetName,
   options,
@@ -164,7 +159,6 @@ const Input = styled.input`
   border: none;
   outline: none;
 `;
-
 const OptionsWrapper = styled.div`
   height: 100%;
   display: flex;
@@ -175,7 +169,6 @@ const OptionWrapper = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const Radio = styled.input.attrs((props) => ({ type: 'radio' }))`
   opacity: 0;
   width: 0px;
@@ -211,7 +204,6 @@ const SelectWrapper = styled.div`
 const Select = styled.select`
   border: none;
   font-size: 0.7rem;
-
   text-align: center;
   outline: none;
 `;
